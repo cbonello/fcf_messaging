@@ -1,8 +1,8 @@
 import 'package:fcf_messaging/blocs/signin/signin_bloc.dart';
 import 'package:fcf_messaging/blocs/signup/signup_bloc.dart';
-import 'package:fcf_messaging/screens/screens/signin/signin_form.dart';
-import 'package:fcf_messaging/screens/screens/signin/signup_form.dart';
-import 'package:fcf_messaging/screens/screens/signin/tabbar.dart';
+import 'package:fcf_messaging/screens/signin/signin_form.dart';
+import 'package:fcf_messaging/screens/signin/signup_form.dart';
+import 'package:fcf_messaging/screens/signin/tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

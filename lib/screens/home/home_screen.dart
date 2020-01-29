@@ -2,10 +2,7 @@ import 'package:fcf_messaging/blocs/authentication/authentication_bloc.dart';
 import 'package:fcf_messaging/blocs/tab/tab_bloc.dart';
 import 'package:fcf_messaging/models/app_tabs_model.dart';
 import 'package:fcf_messaging/models/user_model.dart';
-import 'package:fcf_messaging/screens/screens/home/tabs/chats_tab.dart';
-import 'package:fcf_messaging/screens/screens/home/tabs/contacts_tab.dart';
-import 'package:fcf_messaging/screens/screens/home/tabs/notifications_tab.dart';
-import 'package:fcf_messaging/screens/screens/home/tabs/status_tab.dart';
+import 'package:fcf_messaging/screens/home/tabs/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
