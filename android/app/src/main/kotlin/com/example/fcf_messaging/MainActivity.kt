@@ -1,4 +1,4 @@
-package com.example.fcf_messaging
+package com.electrixsheep.fcf_messaging
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
