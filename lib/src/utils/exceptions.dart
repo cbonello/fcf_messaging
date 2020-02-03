@@ -44,6 +44,8 @@ class AppException implements Exception {
         return const AppException('Account already exists with different credential');
       case 'ERROR_OPERATION_NOT_ALLOWED':
         return const AppException('Google accounts are disabled');
+      case 'ERROR_NETWORK_REQUEST_FAILED':
+        return const AppException('No Internet connection');
       // Firebase Authentication: createUserWithEmailAndPassword().
       case 'ERROR_WEAK_PASSWORD':
         return const AppException('Password is not strong enough');
