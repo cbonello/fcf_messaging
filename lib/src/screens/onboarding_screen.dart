@@ -30,12 +30,12 @@ class OnboardingScreen extends StatelessWidget {
               const SizedBox(height: 10.0),
               Text(
                 context.l10n().appTitle,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32.0),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 32.0),
               ),
               const SizedBox(height: 40.0),
-              const Text(
-                'An open source messaging app developed with Flutter',
-                style: TextStyle(fontSize: 28.0),
+              Text(
+                context.l10n().osSubtitle,
+                style: const TextStyle(fontSize: 28.0),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40.0),
@@ -46,9 +46,9 @@ class OnboardingScreen extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(20.0),
                 onPressed: () => authenticationBloc.add(Authenticate(user: _user)),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(color: Colors.white, fontSize: 24.0),
+                child: Text(
+                  context.l10n().osButton,
+                  style: const TextStyle(color: Colors.white, fontSize: 24.0),
                 ),
               ),
             ],

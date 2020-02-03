@@ -25,6 +25,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "bnvChats" : MessageLookupByLibrary.simpleMessage("Chats"),
     "bnvContacts" : MessageLookupByLibrary.simpleMessage("Contacts"),
     "bnvNotifications" : MessageLookupByLibrary.simpleMessage("Notifications"),
-    "bnvStatus" : MessageLookupByLibrary.simpleMessage("Statut")
+    "bnvStatus" : MessageLookupByLibrary.simpleMessage("Statut"),
+    "osButton" : MessageLookupByLibrary.simpleMessage("Continuer"),
+    "osSubtitle" : MessageLookupByLibrary.simpleMessage("Une application de messagerie open source développée avec Flutter")
   };
 }
