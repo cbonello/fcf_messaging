@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcf_messaging/constants.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
 
-abstract class UserRepositoryInterface {
+abstract class UsersRepositoryInterface {
   Future<UserModel> getUser(String uid);
   Future<UserModel> setUser(String uid, String name, String email, [String photoUrl]);
   Future<bool> isNewUser(String uid);
 }
 
-class UsersRepository implements UserRepositoryInterface {
+class UsersRepository implements UsersRepositoryInterface {
   UsersRepository({
     Firestore firestoreService,
     this.timeout = DEFAULT_MESSAGE_SEND_TIMEOUT,
