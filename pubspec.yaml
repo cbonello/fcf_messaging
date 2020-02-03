@@ -36,6 +36,7 @@ dependencies:
   path_provider: ^1.5.1
   # responsive_builder: ^0.1.4
   rxdart: ^0.23.1
+  shared_preferences: ^0.5.6+1
 
 dev_dependencies:
   bloc_test: ^3.1.0
