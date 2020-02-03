@@ -6,7 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lumberdash/lumberdash.dart';
 
-class AuthenticationRepository {
+abstract class AuthenticationRepositoryInterface {
+  Future<UserModel> signInWithCurrentUser();
+  Future<UserModel> signInWithEmailAndPassword({String email, String password});
+  Future<UserModel> signInWithGoogle();
+  Future<UserModel> signUp({String name, String email, String password});
+  Future<void> signOut();
+}
+
+class AuthenticationRepository implements AuthenticationRepositoryInterface {
   AuthenticationRepository({
     FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignin,
@@ -19,6 +27,7 @@ class AuthenticationRepository {
   final GoogleSignIn _googleSignIn;
   final UsersRepository _usersRepository;
 
+  @override
   Future<UserModel> signInWithCurrentUser() async {
     final FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
     if (firebaseUser != null) {
@@ -33,7 +42,8 @@ class AuthenticationRepository {
     return null;
   }
 
-  Future<UserModel> signInWithEmailAndPassword(String email, String password) async {
+  @override
+  Future<UserModel> signInWithEmailAndPassword({String email, String password}) async {
     AuthResult authResult;
     try {
       authResult = await _firebaseAuth.signInWithEmailAndPassword(
@@ -69,6 +79,7 @@ class AuthenticationRepository {
     }
   }
 
+  @override
   Future<UserModel> signInWithGoogle() async {
     AuthResult authResult;
     try {
@@ -103,6 +114,7 @@ class AuthenticationRepository {
     }
   }
 
+  @override
   Future<UserModel> signUp({String name, String email, String password}) async {
     AuthResult authResult;
     try {
@@ -131,6 +143,7 @@ class AuthenticationRepository {
     }
   }
 
+  @override
   Future<void> signOut() async {
     // TODO(cbonello): Update activity.
     try {
