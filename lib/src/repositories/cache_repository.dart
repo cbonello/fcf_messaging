@@ -50,9 +50,11 @@ class CacheRepository
   final UserModel _user;
   final int _maxChats, _maxContacts;
 
-  final ChatsRepository _chatsRepository = locator<ChatsRepository>();
-  final ContactsRepository _contactsRepository = locator<ContactsRepository>();
-  final MessagesRepository _messagesRepository = locator<MessagesRepository>();
+  final ChatsRepositoryInterface _chatsRepository = locator<ChatsRepositoryInterface>();
+  final ContactsRepositoryInterface _contactsRepository =
+      locator<ContactsRepositoryInterface>();
+  final MessagesRepositoryInterface _messagesRepository =
+      locator<MessagesRepositoryInterface>();
   final HiveRepository _hiveRepository = locator<HiveRepository>();
 
   final Map<String, ChatWithLastMessageModel> _chatsCache =

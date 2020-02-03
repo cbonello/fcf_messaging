@@ -12,8 +12,8 @@ part 'signin_event.dart';
 part 'signin_state.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
-  final AuthenticationRepository _authenticationRepository =
-      locator<AuthenticationRepository>();
+  final AuthenticationRepositoryInterface _authenticationRepository =
+      locator<AuthenticationRepositoryInterface>();
 
   @override
   SignInState get initialState => SignInState.empty();
@@ -67,8 +67,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     yield SignInState.loading();
     try {
       final UserModel user = await _authenticationRepository.signInWithEmailAndPassword(
-        email,
-        password,
+        email: email,
+        password: password,
       );
       yield SignInState.success(user);
     } catch (exception) {

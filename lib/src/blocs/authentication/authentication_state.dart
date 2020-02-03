@@ -10,8 +10,22 @@ abstract class AuthenticationState extends Equatable {
 
 class Uninitialized extends AuthenticationState {}
 
+class DisplaySplashScreen extends AuthenticationState {}
+
+class DisplayOnboarding extends AuthenticationState {
+  const DisplayOnboarding({@required this.user});
+
+  final UserModel user;
+
+  @override
+  List<Object> get props => <Object>[user];
+
+  @override
+  String toString() => 'DisplayOnboarding { user: $user }';
+}
+
 class Authenticated extends AuthenticationState {
-  const Authenticated(this.user) : assert(user != null);
+  const Authenticated({@required this.user}) : assert(user != null);
 
   final UserModel user;
 

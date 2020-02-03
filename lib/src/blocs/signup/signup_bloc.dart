@@ -13,8 +13,8 @@ part 'signup_event.dart';
 part 'signup_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  final AuthenticationRepository _authenticationRepository =
-      locator<AuthenticationRepository>();
+  final AuthenticationRepositoryInterface _authenticationRepository =
+      locator<AuthenticationRepositoryInterface>();
 
   @override
   SignUpState get initialState => SignUpState.empty();
