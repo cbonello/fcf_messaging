@@ -1,5 +1,3 @@
-// ignore_for_file: always_specify_types, prefer_final_locals, avoid_as
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'hive_message_model.dart';
@@ -10,7 +8,7 @@ part of 'hive_message_model.dart';
 
 class HiveMessageModelAdapter extends TypeAdapter<HiveMessageModel> {
   @override
-  final typeId = 3;
+  final typeId = 1;
 
   @override
   HiveMessageModel read(BinaryReader reader) {

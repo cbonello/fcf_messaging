@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key, @required this.authenticatedUser}) : super(key: key);
 
-  final UserModel authenticatedUser;
+  final RegisteredUserModel authenticatedUser;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

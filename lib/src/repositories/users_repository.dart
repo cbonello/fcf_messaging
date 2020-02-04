@@ -5,8 +5,13 @@ import 'package:fcf_messaging/constants.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
 
 abstract class UsersRepositoryInterface {
-  Future<UserModel> getUser(String uid);
-  Future<UserModel> setUser(String uid, String name, String email, [String photoUrl]);
+  Future<RegisteredUserModel> getUser(String uid);
+  Future<RegisteredUserModel> setUser(
+    String uid,
+    String name,
+    String email, [
+    String photoUrl,
+  ]);
   Future<bool> isNewUser(String uid);
 }
 
@@ -20,18 +25,21 @@ class UsersRepository implements UsersRepositoryInterface {
   final Duration timeout;
 
   @override
-  Future<UserModel> getUser(String uid) async {
+  Future<RegisteredUserModel> getUser(String uid) async {
     final DocumentReference ref = _firestoreService.collection(USERS_PATH).document(uid);
     final DocumentSnapshot snapshot = await ref.get();
     if (snapshot.exists) {
-      final UserModel user = UserModel.fromJson(ref.documentID, snapshot.data);
+      final RegisteredUserModel user = RegisteredUserModel.fromJson(
+        ref.documentID,
+        snapshot.data,
+      );
       return user;
     }
     return null;
   }
 
   @override
-  Future<UserModel> setUser(
+  Future<RegisteredUserModel> setUser(
     String uid,
     String name,
     String email, [
@@ -46,13 +54,13 @@ class UsersRepository implements UsersRepositoryInterface {
       'createdAt': FieldValue.serverTimestamp(),
     };
     await ref.setData(data);
-    final UserModel user = UserModel.fromJson(uid, data);
+    final RegisteredUserModel user = RegisteredUserModel.fromJson(uid, data);
     return user;
   }
 
   @override
   Future<bool> isNewUser(String uid) async {
-    final UserModel user = await getUser(uid);
+    final RegisteredUserModel user = await getUser(uid);
     return user == null;
   }
 

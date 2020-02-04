@@ -9,7 +9,7 @@ import 'package:meta/meta.dart';
 
 part 'hive_message_model.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 1)
 class HiveMessageModel extends HiveObject {
   HiveMessageModel({
     @required this.documentID,

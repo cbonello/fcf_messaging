@@ -49,7 +49,7 @@ class SendTextMessageEvent extends MessagesEvent {
   const SendTextMessageEvent(this.chatId, this.sender, this.text);
 
   final String chatId, text;
-  final UserModel sender;
+  final RegisteredUserModel sender;
 
   @override
   List<Object> get props => <Object>[chatId, sender, text];
@@ -63,7 +63,7 @@ class SendImageMessageEvent extends MessagesEvent {
   const SendImageMessageEvent(this.chatId, this.sender, this.imageFile);
 
   final String chatId;
-  final UserModel sender;
+  final RegisteredUserModel sender;
   final File imageFile;
 
   @override

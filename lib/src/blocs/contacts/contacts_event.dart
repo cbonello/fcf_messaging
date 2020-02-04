@@ -7,7 +7,7 @@ abstract class ContactsEvent extends Equatable {
 class AddContact extends ContactsEvent {
   const AddContact(this.contact);
 
-  final ContactModel contact;
+  final UserModel contact;
 
   @override
   List<Object> get props => <Object>[contact];
@@ -19,7 +19,7 @@ class AddContact extends ContactsEvent {
 class ContactsReceivedFromCache extends ContactsEvent {
   const ContactsReceivedFromCache(this.contacts);
 
-  final List<ContactModel> contacts;
+  final List<UserModel> contacts;
 
   @override
   List<Object> get props => <Object>[contacts];

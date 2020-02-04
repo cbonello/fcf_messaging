@@ -1,31 +1,32 @@
 import 'dart:typed_data';
 
-import 'package:fcf_messaging/src/models/contact_model.dart';
+import 'package:fcf_messaging/src/models/user_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 
-part 'hive_contact_model.g.dart';
+part 'hive_unregistered_user_model.g.dart';
 
-@HiveType(typeId: 2)
-class HiveContactModel extends HiveObject {
-  HiveContactModel({
+@HiveType(typeId: 3)
+class HiveUnregisteredUserModel extends HiveObject {
+  HiveUnregisteredUserModel({
     @required this.name,
     @required this.defaultEmail,
     @required this.emails,
     this.photo,
   });
 
-  factory HiveContactModel.fromContactModel(ContactModel contact) {
-    return HiveContactModel(
+  factory HiveUnregisteredUserModel.fromUnregisteredUserModel(
+      UnregisteredUserModel contact) {
+    return HiveUnregisteredUserModel(
       name: contact.name,
-      defaultEmail: contact.defaultEmail,
+      defaultEmail: contact.email,
       emails: contact.emails,
       photo: contact.photo,
     );
   }
 
-  ContactModel toContactModel() => ContactModel(
+  UnregisteredUserModel toUnregisteredUserModel() => UnregisteredUserModel(
         name: name,
         defaultEmail: defaultEmail,
         emails: emails,
@@ -46,7 +47,7 @@ class HiveContactModel extends HiveObject {
 
   @override
   String toString() {
-    return '''HiveContactModel {
+    return '''HiveUnregisteredUserModel {
       name: "$name",
       defaultEmail: "$defaultEmail",
       emails: [ $emails ],

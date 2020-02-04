@@ -14,8 +14,12 @@ abstract class MessagesRepositoryInterface {
     String chatId,
     MessageModel prevMessage,
   );
-  Future<void> sendTextMessage(String chatId, UserModel sender, String text);
-  Future<void> sendImageMessage(String chatId, UserModel sender, File imageFile);
+  Future<void> sendTextMessage(String chatId, RegisteredUserModel sender, String text);
+  Future<void> sendImageMessage(
+    String chatId,
+    RegisteredUserModel sender,
+    File imageFile,
+  );
   Future<List<ImageMessageModel>> getImageAttachments(String chatId);
 }
 
@@ -85,7 +89,8 @@ class MessagesRepository implements MessagesRepositoryInterface {
   }
 
   @override
-  Future<void> sendTextMessage(String chatId, UserModel sender, String text) async {
+  Future<void> sendTextMessage(
+      String chatId, RegisteredUserModel sender, String text) async {
     final DocumentReference ref = _firestoreService
         .collection(CHATS_PATH)
         .document(chatId)
@@ -104,7 +109,8 @@ class MessagesRepository implements MessagesRepositoryInterface {
   }
 
   @override
-  Future<void> sendImageMessage(String chatId, UserModel sender, File imageFile) async {
+  Future<void> sendImageMessage(
+      String chatId, RegisteredUserModel sender, File imageFile) async {
     final StorageReference reference = _firebaseStorage
         .ref()
         .child(CHATS_FOLDER)

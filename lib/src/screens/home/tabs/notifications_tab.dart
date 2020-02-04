@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class NotificationsTab extends StatelessWidget {
   const NotificationsTab({Key key, @required this.authenticatedUser}) : super(key: key);
 
-  final UserModel authenticatedUser;
+  final RegisteredUserModel authenticatedUser;
 
   @override
   Widget build(BuildContext context) {

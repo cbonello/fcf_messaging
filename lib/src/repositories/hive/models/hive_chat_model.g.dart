@@ -19,7 +19,7 @@ class HiveChatModelAdapter extends TypeAdapter<HiveChatModel> {
     return HiveChatModel(
       documentID: fields[0] as String,
       private: fields[1] as bool,
-      members: (fields[2] as List)?.cast<HiveChatMemberModel>(),
+      members: (fields[2] as List)?.cast<HiveRegisteredUserModel>(),
       name: fields[3] as String,
       photoUrl: fields[4] as String,
       createdAt: fields[5] as String,
@@ -42,38 +42,5 @@ class HiveChatModelAdapter extends TypeAdapter<HiveChatModel> {
       ..write(obj.photoUrl)
       ..writeByte(5)
       ..write(obj.createdAt);
-  }
-}
-
-class HiveChatMemberModelAdapter extends TypeAdapter<HiveChatMemberModel> {
-  @override
-  final typeId = 1;
-
-  @override
-  HiveChatMemberModel read(BinaryReader reader) {
-    var numOfFields = reader.readByte();
-    var fields = <int, dynamic>{
-      for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return HiveChatMemberModel(
-      userID: fields[0] as String,
-      name: fields[1] as String,
-      photoUrl: fields[2] as String,
-      status: fields[3] as String,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, HiveChatMemberModel obj) {
-    writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.userID)
-      ..writeByte(1)
-      ..write(obj.name)
-      ..writeByte(2)
-      ..write(obj.photoUrl)
-      ..writeByte(3)
-      ..write(obj.status);
   }
 }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fcf_messaging/src/models/contact_model.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
 import 'package:fcf_messaging/src/repositories/cache_repository.dart';
 import 'package:fcf_messaging/src/utils/exceptions.dart';
@@ -12,20 +11,16 @@ part 'contacts_event.dart';
 part 'contacts_state.dart';
 
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
-  ContactsBloc(
-      {@required UserModel user, @required CacheRepositoryContactsInterface cache})
-      : _user = user,
-        _cache = cache {
-    _cacheSub = _cache.readContacts(_user.documentID).listen(
-      (List<ContactModel> contacts) {
+  ContactsBloc({@required CacheRepositoryContactsInterface cache}) : _cache = cache {
+    _cacheSub = _cache.readUnregisteredUsers().listen(
+      (List<UserModel> contacts) {
         add(ContactsReceivedFromCache(contacts));
       },
     );
   }
 
-  final UserModel _user;
   final CacheRepositoryContactsInterface _cache;
-  StreamSubscription<List<ContactModel>> _cacheSub;
+  StreamSubscription<List<UserModel>> _cacheSub;
 
   @override
   ContactsState get initialState => Uninitialized();
@@ -43,7 +38,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> mapAddContactEventToState(AddContact event) async* {
     try {
-      await _cache.addContact(event.contact);
+      await _cache.addUnregisteredUser(event.contact);
     } catch (e) {
       yield ContactsError(AppException.from(e));
     }
@@ -53,7 +48,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     ContactsReceivedFromCache event,
   ) async* {
     try {
-      event.contacts.sort((ContactModel a, ContactModel b) {
+      event.contacts.sort((UserModel a, UserModel b) {
         return a.name.compareTo(b.name);
       });
       yield ContactsFetched(event.contacts);

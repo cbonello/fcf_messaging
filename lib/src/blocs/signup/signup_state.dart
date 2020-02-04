@@ -51,7 +51,7 @@ class SignUpState extends Equatable {
     );
   }
 
-  factory SignUpState.success(UserModel user) {
+  factory SignUpState.success(RegisteredUserModel user) {
     return SignUpState(
       isNameValid: true,
       isEmailValid: true,
@@ -66,7 +66,7 @@ class SignUpState extends Equatable {
 
   final bool isNameValid, isEmailValid, isPasswordValid;
   final bool isTOSPrivacyAccepted, isSubmitting, isSuccess;
-  final UserModel user;
+  final RegisteredUserModel user;
   final AppException exceptionRaised;
 
   @override
@@ -110,7 +110,7 @@ class SignUpState extends Equatable {
     bool isTOSPrivacyAccepted,
     bool isSubmitEnabled,
     bool isSubmitting,
-    UserModel user,
+    RegisteredUserModel user,
     bool isSuccess,
     AppException exceptionRaised,
   }) {

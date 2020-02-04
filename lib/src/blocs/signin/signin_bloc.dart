@@ -66,7 +66,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }) async* {
     yield SignInState.loading();
     try {
-      final UserModel user = await _authenticationRepository.signInWithEmailAndPassword(
+      final RegisteredUserModel user =
+          await _authenticationRepository.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -78,7 +79,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   Stream<SignInState> _mapSignInWithGooglePressedToState() async* {
     try {
-      final UserModel user = await _authenticationRepository.signInWithGoogle();
+      final RegisteredUserModel user = await _authenticationRepository.signInWithGoogle();
       yield SignInState.success(user);
     } catch (exception) {
       yield SignInState.failure(AppException.from(exception));

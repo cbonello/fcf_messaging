@@ -15,7 +15,7 @@ class StartAuthentication extends AuthenticationEvent {}
 class SignedIn extends AuthenticationEvent {
   const SignedIn({@required this.user}) : assert(user != null);
 
-  final UserModel user;
+  final RegisteredUserModel user;
 
   @override
   List<Object> get props => <Object>[user];

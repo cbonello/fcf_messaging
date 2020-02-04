@@ -1,22 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'hive_contact_model.dart';
+part of 'hive_unregistered_user_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class HiveContactModelAdapter extends TypeAdapter<HiveContactModel> {
+class HiveUnregisteredUserModelAdapter
+    extends TypeAdapter<HiveUnregisteredUserModel> {
   @override
-  final typeId = 2;
+  final typeId = 3;
 
   @override
-  HiveContactModel read(BinaryReader reader) {
+  HiveUnregisteredUserModel read(BinaryReader reader) {
     var numOfFields = reader.readByte();
     var fields = <int, dynamic>{
       for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return HiveContactModel(
+    return HiveUnregisteredUserModel(
       name: fields[0] as String,
       defaultEmail: fields[1] as String,
       emails: (fields[2] as List)?.cast<String>(),
@@ -25,7 +26,7 @@ class HiveContactModelAdapter extends TypeAdapter<HiveContactModel> {
   }
 
   @override
-  void write(BinaryWriter writer, HiveContactModel obj) {
+  void write(BinaryWriter writer, HiveUnregisteredUserModel obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)

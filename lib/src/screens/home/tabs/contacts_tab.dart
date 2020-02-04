@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class ContactsTab extends StatefulWidget {
   ContactsTab({Key key, @required this.authenticatedUser}) : super(key: key);
 
-  final UserModel authenticatedUser;
-  final List<UserModel> contacts = <UserModel>[];
+  final RegisteredUserModel authenticatedUser;
+  final List<RegisteredUserModel> contacts = <RegisteredUserModel>[];
 
   @override
   _ContactsTabState createState() => _ContactsTabState();
@@ -14,7 +14,7 @@ class ContactsTab extends StatefulWidget {
 
 class _ContactsTabState extends State<ContactsTab> {
   TextEditingController _searchController;
-  final List<UserModel> _filteredContacts = <UserModel>[];
+  final List<RegisteredUserModel> _filteredContacts = <RegisteredUserModel>[];
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _ContactsTabState extends State<ContactsTab> {
                                 ..clear()
                                 ..addAll(
                                   widget.contacts.where(
-                                    (UserModel user) =>
+                                    (RegisteredUserModel user) =>
                                         user.name.toLowerCase().contains(
                                               newSearch.trim().toLowerCase(),
                                             ) ||

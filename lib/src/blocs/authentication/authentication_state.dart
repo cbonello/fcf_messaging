@@ -17,7 +17,7 @@ class DisplayOnboarding extends AuthenticationState {}
 class Authenticated extends AuthenticationState {
   const Authenticated({@required this.user}) : assert(user != null);
 
-  final UserModel user;
+  final RegisteredUserModel user;
 
   @override
   List<Object> get props => <Object>[user];

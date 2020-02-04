@@ -88,7 +88,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async* {
     yield SignUpState.loading();
     try {
-      final UserModel user = await _authenticationRepository.signUp(
+      final RegisteredUserModel user = await _authenticationRepository.signUp(
         name: name,
         email: email,
         password: password,

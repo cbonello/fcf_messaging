@@ -51,7 +51,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   Stream<AuthenticationState> _mapAuthenticateToState(StartAuthentication event) async* {
     try {
-      final UserModel user = await _authenticationRepository.signInWithCurrentUser();
+      final RegisteredUserModel user =
+          await _authenticationRepository.signInWithCurrentUser();
       if (user != null) {
         yield Authenticated(user: user);
       } else {

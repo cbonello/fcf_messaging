@@ -1,14 +1,13 @@
 import 'package:fcf_messaging/src/blocs/chats/chats_bloc.dart';
-import 'package:fcf_messaging/src/models/chat_model.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
-import 'package:fcf_messaging/src/services/app_localizations.dart';
+// import 'package:fcf_messaging/src/services/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatsTab extends StatelessWidget {
   const ChatsTab({Key key, @required this.authenticatedUser}) : super(key: key);
 
-  final UserModel authenticatedUser;
+  final RegisteredUserModel authenticatedUser;
 
   @override
   Widget build(BuildContext context) {
@@ -27,22 +26,24 @@ class ChatsTab extends StatelessWidget {
                 final ChatsBloc chatsBloc = context.bloc<ChatsBloc>();
                 chatsBloc.add(
                   AddChat(
-                    members: <ChatMember>[
-                      ChatMember(
-                        userID: authenticatedUser.documentID,
+                    members: <RegisteredUserModel>[
+                      RegisteredUserModel(
+                        userID: authenticatedUser.userID,
                         name: authenticatedUser.name,
+                        email: authenticatedUser.email,
                         status: authenticatedUser.status,
                       ),
-                      const ChatMember(
+                      const RegisteredUserModel(
                         userID: 'efgh',
                         name: 'Foo Bar',
+                        email: 'foo@bar.com',
                         status: 'Hi',
                       ),
                     ],
                   ),
                 );
               },
-              child: Text(context.l10n().appTitle),
+              child: const Text('Add new chat'),
             );
           }
           return ListView.builder(
@@ -57,22 +58,24 @@ class ChatsTab extends StatelessWidget {
                       final ChatsBloc chatsBloc = context.bloc<ChatsBloc>();
                       chatsBloc.add(
                         AddChat(
-                          members: <ChatMember>[
-                            ChatMember(
-                              userID: authenticatedUser.documentID,
+                          members: <RegisteredUserModel>[
+                            RegisteredUserModel(
+                              userID: authenticatedUser.userID,
                               name: authenticatedUser.name,
+                              email: authenticatedUser.email,
                               status: authenticatedUser.status,
                             ),
-                            const ChatMember(
+                            const RegisteredUserModel(
                               userID: 'efgh',
                               name: 'Foo Bar',
+                              email: 'foo@bar.com',
                               status: 'Hi',
                             ),
                           ],
                         ),
                       );
                     },
-                    child: Text(context.l10n().appTitle),
+                    child: const Text('Add new chat'),
                   ),
                 ],
               );

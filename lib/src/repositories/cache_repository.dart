@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcf_messaging/constants.dart';
 import 'package:fcf_messaging/src/models/chat_model.dart';
 import 'package:fcf_messaging/src/models/chat_with_last_message_model.dart';
-import 'package:fcf_messaging/src/models/contact_model.dart';
 import 'package:fcf_messaging/src/models/message_model.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
 import 'package:fcf_messaging/src/repositories/chats_repository.dart';
@@ -21,7 +20,7 @@ import 'package:rxdart/rxdart.dart';
 
 abstract class CacheRepositoryChatsInterface {
   Future<void> addChat({
-    List<ChatMember> members,
+    List<RegisteredUserModel> members,
     String name,
     String photoUrl,
   });
@@ -29,8 +28,8 @@ abstract class CacheRepositoryChatsInterface {
 }
 
 abstract class CacheRepositoryContactsInterface {
-  Future<void> addContact(ContactModel contact);
-  Stream<List<ContactModel>> readContacts(String uid);
+  Future<void> addUnregisteredUser(UnregisteredUserModel unregisteredUser);
+  Stream<List<UnregisteredUserModel>> readUnregisteredUsers();
 }
 
 class CacheRepository
@@ -39,7 +38,7 @@ class CacheRepository
         CacheRepositoryContactsInterface,
         MessagesRepositoryInterface {
   CacheRepository(
-      {@required UserModel user,
+      {@required RegisteredUserModel user,
       int maxChats = MAX_CHATS,
       int maxContacts = MAX_CONTACTS})
       : _user = user,
@@ -47,7 +46,7 @@ class CacheRepository
         _maxContacts = maxContacts,
         assert(user != null);
 
-  final UserModel _user;
+  final RegisteredUserModel _user;
   final int _maxChats, _maxContacts;
 
   final ChatsRepositoryInterface _chatsRepository = locator<ChatsRepositoryInterface>();
@@ -59,12 +58,13 @@ class CacheRepository
 
   final Map<String, ChatWithLastMessageModel> _chatsCache =
       <String, ChatWithLastMessageModel>{};
-  final SplayTreeSet<ContactModel> _contactsCache = SplayTreeSet<ContactModel>(
-    (ContactModel a, ContactModel b) => a.name.compareTo(b.name),
+  final SplayTreeSet<UnregisteredUserModel> _contactsCache =
+      SplayTreeSet<UnregisteredUserModel>(
+    (UnregisteredUserModel a, UnregisteredUserModel b) => a.name.compareTo(b.name),
   );
 
   StreamSubscription<List<ChatModel>> _firestoreChatsSub;
-  StreamSubscription<List<ContactModel>> _firestoreContactsSub;
+  StreamSubscription<List<UnregisteredUserModel>> _firestoreContactsSub;
 
   final BehaviorSubject<List<ChatWithLastMessageModel>> _chatsController =
       BehaviorSubject<List<ChatWithLastMessageModel>>.seeded(
@@ -73,10 +73,10 @@ class CacheRepository
   Sink<List<ChatWithLastMessageModel>> get _inChats => _chatsController.sink;
   Stream<List<ChatWithLastMessageModel>> get _outChats => _chatsController.stream;
 
-  final BehaviorSubject<List<ContactModel>> _contactsController =
-      BehaviorSubject<List<ContactModel>>.seeded(<ContactModel>[]);
-  Sink<List<ContactModel>> get _inContacts => _contactsController.sink;
-  Stream<List<ContactModel>> get _outContacts => _contactsController.stream;
+  final BehaviorSubject<List<UnregisteredUserModel>> _contactsController =
+      BehaviorSubject<List<UnregisteredUserModel>>.seeded(<UnregisteredUserModel>[]);
+  Sink<List<UnregisteredUserModel>> get _inContacts => _contactsController.sink;
+  Stream<List<UnregisteredUserModel>> get _outContacts => _contactsController.stream;
 
   Future<CacheRepository> init() async {
     final List<ChatModel> chats = await _hiveRepository.readChats();
@@ -89,10 +89,11 @@ class CacheRepository
     }
     _inChats.add(_chatsCache.values.toList());
 
-    final List<ContactModel> contacts = await _hiveRepository.readContacts();
+    final List<UnregisteredUserModel> contacts =
+        await _hiveRepository.readUnregisteredUsers();
     contacts.forEach(_contactsCache.add);
 
-    _firestoreChatsSub = _chatsRepository.readChats(_user.documentID).listen(
+    _firestoreChatsSub = _chatsRepository.readChats(_user.userID).listen(
       (List<ChatModel> chats) {
         // TODO(cbonello): handle chats deleted on server side.
         addAllChats(chats);
@@ -100,7 +101,7 @@ class CacheRepository
     );
 
     // _firestoreContactsSub = _contactsRepository
-    //     .readContacts(_user.documentID)
+    //     .readContacts(_user.userID)
     //     .listen((List<ContactModel> contacts) => addAllContacts(contacts));
 
     return this;
@@ -110,7 +111,7 @@ class CacheRepository
 
   @override
   Future<void> addChat({
-    List<ChatMember> members,
+    List<RegisteredUserModel> members,
     String name,
     String photoUrl,
   }) async {
@@ -135,7 +136,6 @@ class CacheRepository
     for (final ChatModel chat in chats) {
       await _doAddChat(chat, () => cacheUpdated = true);
     }
-    print('#### cacheUpdated: $cacheUpdated');
     if (cacheUpdated) {
       _inChats.add(_chatsCache.values.toList());
     }
@@ -179,43 +179,43 @@ class CacheRepository
   // CacheRepositoryContactsInterface
 
   @override
-  Future<void> addContact(ContactModel contact) async {
+  Future<void> addUnregisteredUser(UnregisteredUserModel unregisteredUser) async {
     await _doAddContact(
-      contact,
+      unregisteredUser,
       () => _inContacts.add(
-        List<ContactModel>.from(_contactsCache, growable: false),
+        List<UnregisteredUserModel>.from(_contactsCache, growable: false),
       ),
     );
   }
 
   @override
-  Stream<List<ContactModel>> readContacts(String uid) => _outContacts;
+  Stream<List<UnregisteredUserModel>> readUnregisteredUsers() => _outContacts;
 
-  Future<void> addAllContacts(Iterable<ContactModel> contacts) async {
+  Future<void> addAllContacts(Iterable<UnregisteredUserModel> contacts) async {
     bool cacheUpdated = false;
-    for (final ContactModel contact in contacts) {
+    for (final UnregisteredUserModel contact in contacts) {
       await _doAddContact(contact, () => cacheUpdated = true);
     }
     if (cacheUpdated) {
-      _inContacts.add(List<ContactModel>.from(_contactsCache, growable: false));
+      _inContacts.add(List<UnregisteredUserModel>.from(_contactsCache, growable: false));
     }
   }
 
   Future<int> clearContacts() async {
     _contactsCache.clear();
-    return await _hiveRepository.clearContacts();
+    return await _hiveRepository.clearUnregisteredUsers();
   }
 
-  bool _contactExists(ContactModel contact) {
+  bool _contactExists(UnregisteredUserModel contact) {
     return _contactsCache.contains(contact);
   }
 
-  Future<void> _doAddContact(ContactModel contact, Function addHandler) async {
+  Future<void> _doAddContact(UnregisteredUserModel contact, Function addHandler) async {
     if (_contactExists(contact) == false) {
       if (_contactsCache.length >= _maxContacts - 1) {
         throw const AppException('Too many contacts');
       }
-      await _hiveRepository.addContact(contact);
+      await _hiveRepository.addUnregisteredUser(contact);
       addHandler();
     }
   }
@@ -239,10 +239,11 @@ class CacheRepository
       _messagesRepository.getPreviousChatMessages(chatId, prevMessage);
 
   @override
-  Future<void> sendTextMessage(String chatId, UserModel sender, String text) async {
+  Future<void> sendTextMessage(
+      String chatId, RegisteredUserModel sender, String text) async {
     final TextMessageModel message = TextMessageModel(
       documentID: null,
-      sender: sender.documentID,
+      sender: sender.userID,
       text: text,
       timestamp: Timestamp.now(),
     );
@@ -251,10 +252,11 @@ class CacheRepository
   }
 
   @override
-  Future<void> sendImageMessage(String chatId, UserModel sender, File imageFile) async {
+  Future<void> sendImageMessage(
+      String chatId, RegisteredUserModel sender, File imageFile) async {
     final ImageMessageModel message = ImageMessageModel(
       documentID: null,
-      sender: sender.documentID,
+      sender: sender.userID,
       imageUrl: null,
       timestamp: Timestamp.now(),
     );
