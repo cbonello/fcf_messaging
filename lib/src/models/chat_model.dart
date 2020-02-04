@@ -59,6 +59,9 @@ class ChatModel extends Equatable {
   List<Object> get props =>
       <Object>[documentID, private, name, photoUrl, members, createdAt];
 
+  bool get isDirect => members.length == 2;
+  bool get isGroup => members.length > 2;
+
   @override
   String toString() {
     return '''ChatModel {
