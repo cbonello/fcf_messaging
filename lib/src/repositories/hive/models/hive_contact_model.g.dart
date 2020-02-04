@@ -1,5 +1,3 @@
-// ignore_for_file: always_specify_types, prefer_final_locals, avoid_as
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'hive_contact_model.dart';
@@ -19,10 +17,10 @@ class HiveContactModelAdapter extends TypeAdapter<HiveContactModel> {
       for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HiveContactModel(
-      documentID: fields[0] as String,
-      name: fields[1] as String,
-      emails: (fields[3] as List)?.cast<String>(),
-      photoUrl: fields[2] as String,
+      name: fields[0] as String,
+      defaultEmail: fields[1] as String,
+      emails: (fields[2] as List)?.cast<String>(),
+      photo: fields[3] as Uint8List,
     );
   }
 
@@ -31,12 +29,12 @@ class HiveContactModelAdapter extends TypeAdapter<HiveContactModel> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.documentID)
-      ..writeByte(1)
       ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.defaultEmail)
       ..writeByte(2)
-      ..write(obj.photoUrl)
+      ..write(obj.emails)
       ..writeByte(3)
-      ..write(obj.emails);
+      ..write(obj.photo);
   }
 }

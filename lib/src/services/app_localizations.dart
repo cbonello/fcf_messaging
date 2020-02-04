@@ -45,6 +45,10 @@ class AppLocalizations {
   String get bnvContacts => Intl.message('Contacts', name: 'bnvContacts');
   String get bnvStatus => Intl.message('Status', name: 'bnvStatus');
   String get bnvNotifications => Intl.message('Notifications', name: 'bnvNotifications');
+
+  // Contacts screen
+  String get csSearch => Intl.message('Name or email address', name: 'csSearch');
+  String get csNewGroupButton => Intl.message('New group', name: 'csNewGroupButton');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

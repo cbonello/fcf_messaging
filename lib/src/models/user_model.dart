@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:fcf_messaging/src/models/chat_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -29,13 +30,12 @@ final List<Color> _backgroundColors = <Color>[
 class UserModel extends Equatable {
   const UserModel({
     @required this.documentID,
-    @required this.email,
+    this.email,
     @required this.name,
-    // New users that signed up with email/password don't have a photo URL.
+    // New users who signed up with email/password don't have a profile picture.
     this.photoUrl,
     @required this.status,
   })  : assert(documentID != null),
-        assert(email != null),
         assert(name != null),
         assert(status != null);
 
@@ -46,6 +46,15 @@ class UserModel extends Equatable {
       name: json['name'],
       photoUrl: json['photoUrl'],
       status: json['status'],
+    );
+  }
+
+  factory UserModel.chatMember(ChatMember member) {
+    return UserModel(
+      documentID: member.userID,
+      name: member.name,
+      photoUrl: member.photoUrl,
+      status: member.status,
     );
   }
 

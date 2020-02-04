@@ -1,5 +1,3 @@
-// ignore_for_file: always_specify_types, prefer_final_locals, avoid_as
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'hive_chat_model.dart';

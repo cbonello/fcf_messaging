@@ -10,7 +10,7 @@ import 'package:fcf_messaging/src/models/contact_model.dart';
 import 'package:fcf_messaging/src/models/message_model.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
 import 'package:fcf_messaging/src/repositories/chats_repository.dart';
-import 'package:fcf_messaging/src/repositories/contacts_repository.dart';
+// import 'package:fcf_messaging/src/repositories/contacts_repository.dart';
 import 'package:fcf_messaging/src/repositories/hive/hive_repository.dart';
 import 'package:fcf_messaging/src/repositories/messages_repository.dart';
 import 'package:fcf_messaging/src/services/service_locator.dart';
@@ -51,8 +51,8 @@ class CacheRepository
   final int _maxChats, _maxContacts;
 
   final ChatsRepositoryInterface _chatsRepository = locator<ChatsRepositoryInterface>();
-  final ContactsRepositoryInterface _contactsRepository =
-      locator<ContactsRepositoryInterface>();
+  // final ContactsRepositoryInterface _contactsRepository =
+  //     locator<ContactsRepositoryInterface>();
   final MessagesRepositoryInterface _messagesRepository =
       locator<MessagesRepositoryInterface>();
   final HiveRepository _hiveRepository = locator<HiveRepository>();
@@ -99,9 +99,9 @@ class CacheRepository
       },
     );
 
-    _firestoreContactsSub = _contactsRepository
-        .readContacts(_user.documentID)
-        .listen((List<ContactModel> contacts) => addAllContacts(contacts));
+    // _firestoreContactsSub = _contactsRepository
+    //     .readContacts(_user.documentID)
+    //     .listen((List<ContactModel> contacts) => addAllContacts(contacts));
 
     return this;
   }

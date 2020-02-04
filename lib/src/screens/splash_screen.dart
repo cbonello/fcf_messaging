@@ -26,33 +26,35 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FractionallySizedBox(
-              widthFactor: 0.5,
-              child: Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Image(image: logo),
-                  SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: size.width * 0.5 * 0.3,
-                  ),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FractionallySizedBox(
+                widthFactor: 0.5,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    Image(image: logo),
+                    SpinKitThreeBounce(
+                      color: Colors.white,
+                      size: size.width * 0.5 * 0.3,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            AnimatedOpacity(
-              opacity: 1.0,
-              duration: const Duration(seconds: 1),
-              child: Text(
-                context.l10n().appTitle,
-                style: Theme.of(context).textTheme.title,
+              AnimatedOpacity(
+                opacity: 1.0,
+                duration: const Duration(seconds: 1),
+                child: Text(
+                  context.l10n().appTitle,
+                  style: Theme.of(context).textTheme.title,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

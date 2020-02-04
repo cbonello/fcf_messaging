@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:fcf_messaging/src/models/contact_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
@@ -8,47 +10,47 @@ part 'hive_contact_model.g.dart';
 @HiveType(typeId: 2)
 class HiveContactModel extends HiveObject {
   HiveContactModel({
-    @required this.documentID,
     @required this.name,
+    @required this.defaultEmail,
     @required this.emails,
-    this.photoUrl,
+    this.photo,
   });
 
   factory HiveContactModel.fromContactModel(ContactModel contact) {
     return HiveContactModel(
-      documentID: contact.documentID,
       name: contact.name,
+      defaultEmail: contact.defaultEmail,
       emails: contact.emails,
-      photoUrl: contact.photoUrl,
+      photo: contact.photo,
     );
   }
 
   ContactModel toContactModel() => ContactModel(
-        documentID: documentID,
         name: name,
+        defaultEmail: defaultEmail,
         emails: emails,
-        photoUrl: photoUrl,
+        photo: photo,
       );
 
   @HiveField(0)
-  final String documentID;
-
-  @HiveField(1)
   final String name;
 
+  @HiveField(1)
+  final String defaultEmail;
+
   @HiveField(2)
-  final String photoUrl;
+  final List<String> emails;
 
   @HiveField(3)
-  final List<String> emails;
+  final Uint8List photo;
 
   @override
   String toString() {
     return '''HiveContactModel {
-      documentID: "$documentID",
       name: "$name",
+      defaultEmail: "$defaultEmail",
       emails: [ $emails ],
-      photoUrl: "#$photoUrl",
+      photo: "#$photo",
     }''';
   }
 }

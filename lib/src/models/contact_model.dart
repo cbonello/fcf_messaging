@@ -1,48 +1,45 @@
+import 'dart:typed_data';
+
+import 'package:contacts_service/contacts_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 class ContactModel extends Equatable {
   const ContactModel({
-    @required this.documentID,
     @required this.name,
+    @required this.defaultEmail,
     @required this.emails,
-    this.photoUrl,
-  })  : assert(documentID != null),
-        assert(name != null),
+    this.photo,
+  })  : assert(name != null),
+        assert(defaultEmail != null),
         assert(emails != null);
 
-  factory ContactModel.fromJson(String documentID, Map<String, dynamic> json) {
-    assert(json['emails'] != null);
-    final List<String> emails = json['emails']..sort();
+  factory ContactModel.fromContact(Contact contact, String defaultEmail) {
+    final List<String> emails = contact.emails.map((Item i) => i.value).toList()..sort();
 
     return ContactModel(
-      documentID: documentID,
-      name: json['name'],
+      name: contact.displayName,
+      defaultEmail: defaultEmail,
       emails: emails,
-      photoUrl: json['photoUrl'],
+      photo: contact.avatar,
     );
   }
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'name': name,
-        'emails': emails,
-        'photoUrl': photoUrl,
-      };
-
-  final String documentID, name, photoUrl;
+  final String name, defaultEmail;
+  final Uint8List photo;
   final List<String> emails;
 
   @override
-  List<Object> get props => <Object>[documentID, name, emails, photoUrl];
+  List<Object> get props => <Object>[name, defaultEmail, emails, photo];
 
   @override
   String toString() {
     return '''ContactModel {
-      documentID: "$documentID",
       name: "$name",
+      defaultEmail: "$defaultEmail",
       emails: [ $emails ],
-      photoUrl: "#$photoUrl",
+      photo: "#$photo",
     }''';
   }
 }

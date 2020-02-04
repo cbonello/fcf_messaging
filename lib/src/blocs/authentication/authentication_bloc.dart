@@ -29,7 +29,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   ) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
-    } else if (event is Authenticate) {
+    } else if (event is StartAuthentication) {
       yield* _mapAuthenticateToState(event);
     } else if (event is SignedIn) {
       yield* _mapSignedInToState(event);
@@ -40,25 +40,24 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     yield DisplaySplashScreen();
-    try {
-      final UserModel user = await Future<UserModel>.delayed(
-        const Duration(seconds: 2),
-        () => _authenticationRepository.signInWithCurrentUser(),
-      );
-      if (_prefs.getDisplayOnboarding() == true) {
-        await _prefs.setDisplayOnboarding(false);
-        yield DisplayOnboarding(user: user);
-      }
-      add(Authenticate(user: user));
-    } catch (_) {
-      yield const DisplayOnboarding(user: null);
+    await Future<void>.delayed(const Duration(seconds: 3), () {});
+    if (_prefs.getDisplayOnboarding() == true) {
+      await _prefs.setDisplayOnboarding(false);
+      yield DisplayOnboarding();
+    } else {
+      add(StartAuthentication());
     }
   }
 
-  Stream<AuthenticationState> _mapAuthenticateToState(Authenticate event) async* {
-    if (event.user != null) {
-      yield Authenticated(user: event.user);
-    } else {
+  Stream<AuthenticationState> _mapAuthenticateToState(StartAuthentication event) async* {
+    try {
+      final UserModel user = await _authenticationRepository.signInWithCurrentUser();
+      if (user != null) {
+        yield Authenticated(user: user);
+      } else {
+        yield Unauthenticated();
+      }
+    } catch (_) {
       yield Unauthenticated();
     }
   }

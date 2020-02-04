@@ -50,7 +50,7 @@ class _AppState extends State<App> {
             );
           }
           if (state is DisplayOnboarding) {
-            return OnboardingScreen(user: state.user);
+            return OnboardingScreen();
           }
           return SplashScreen();
         },

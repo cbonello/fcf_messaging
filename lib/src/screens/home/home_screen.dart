@@ -25,36 +25,38 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return BlocBuilder<TabBloc, AppTabModel>(
       builder: (BuildContext context, AppTabModel activeTab) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Home'),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.exit_to_app),
-                onPressed: () {
-                  context.bloc<AuthenticationBloc>().add(SignedOut());
-                },
-              )
-            ],
-          ),
-          body: IndexedStack(
-            index: AppTabModel.values.indexOf(activeTab),
-            children: <Widget>[
-              BlocProvider<ChatsBloc>(
-                create: (BuildContext context) => ChatsBloc(
-                  user: widget.authenticatedUser,
-                  cache: CacheRepository(user: widget.authenticatedUser)..init(),
+        return SafeArea(
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Home'),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.exit_to_app),
+                  onPressed: () {
+                    context.bloc<AuthenticationBloc>().add(SignedOut());
+                  },
+                )
+              ],
+            ),
+            body: IndexedStack(
+              index: AppTabModel.values.indexOf(activeTab),
+              children: <Widget>[
+                BlocProvider<ChatsBloc>(
+                  create: (BuildContext context) => ChatsBloc(
+                    user: widget.authenticatedUser,
+                    cache: CacheRepository(user: widget.authenticatedUser)..init(),
+                  ),
+                  child: ChatsTab(authenticatedUser: widget.authenticatedUser),
                 ),
-                child: ChatsTab(authenticatedUser: widget.authenticatedUser),
-              ),
-              ContactsTab(authenticatedUser: widget.authenticatedUser),
-              StatusTab(authenticatedUser: widget.authenticatedUser),
-              NotificationsTab(authenticatedUser: widget.authenticatedUser),
-            ],
-          ),
-          bottomNavigationBar: _BottomNavbar(
-            activeTab: activeTab,
-            onTabSelected: (AppTabModel tab) => tabBloc.add(UpdateTab(tab)),
+                ContactsTab(authenticatedUser: widget.authenticatedUser),
+                StatusTab(authenticatedUser: widget.authenticatedUser),
+                NotificationsTab(authenticatedUser: widget.authenticatedUser),
+              ],
+            ),
+            bottomNavigationBar: _BottomNavbar(
+              activeTab: activeTab,
+              onTabSelected: (AppTabModel tab) => tabBloc.add(UpdateTab(tab)),
+            ),
           ),
         );
       },
