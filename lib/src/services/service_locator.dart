@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:fcf_messaging/src/repositories/authentication_repository.dart';
 import 'package:fcf_messaging/src/repositories/chats_repository.dart';
-// import 'package:fcf_messaging/src/repositories/contacts_repository.dart';
+import 'package:fcf_messaging/src/repositories/contacts_repository.dart';
 import 'package:fcf_messaging/src/repositories/hive/hive_repository.dart';
 import 'package:fcf_messaging/src/repositories/messages_repository.dart';
 import 'package:fcf_messaging/src/repositories/users_repository.dart';
@@ -19,8 +19,8 @@ Future<void> setupLocator() async {
   final ChatsRepository chatsRepository = ChatsRepository();
   locator.registerLazySingleton<ChatsRepositoryInterface>(() => chatsRepository);
 
-  // final ContactsRepository ontactsRepository = ContactsRepository();
-  // locator.registerLazySingleton<ContactsRepositoryInterface>(() => ontactsRepository);
+  final ContactsRepository ontactsRepository = ContactsRepository();
+  locator.registerLazySingleton<ContactsRepositoryInterface>(() => ontactsRepository);
 
   final MessagesRepository messagesRepository = MessagesRepository();
   locator.registerLazySingleton<MessagesRepositoryInterface>(() => messagesRepository);

@@ -3,7 +3,7 @@ import 'package:fcf_messaging/src/blocs/tab/tab_bloc.dart';
 import 'package:fcf_messaging/src/models/app_tabs_model.dart';
 import 'package:fcf_messaging/src/repositories/hive/hive_repository.dart';
 import 'package:fcf_messaging/src/screens/home/home_screen.dart';
-import 'package:fcf_messaging/src/screens/onboarding_screen.dart';
+import 'package:fcf_messaging/src/screens/intro_screen.dart';
 import 'package:fcf_messaging/src/screens/signin/signin_screen.dart';
 import 'package:fcf_messaging/src/screens/splash_screen.dart';
 import 'package:fcf_messaging/src/services/app_localizations.dart';
@@ -49,10 +49,13 @@ class _AppState extends State<App> {
               child: HomeScreen(authenticatedUser: state.user),
             );
           }
-          if (state is DisplayOnboarding) {
-            return OnboardingScreen();
+          if (state is DisplayIntroScreen) {
+            return IntroScreen();
           }
-          return SplashScreen();
+          if (state is DisplaySplashScreen) {
+            return SplashScreen();
+          }
+          return Container();
         },
       ),
     );

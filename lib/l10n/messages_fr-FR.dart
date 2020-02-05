@@ -28,7 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "bnvStatus" : MessageLookupByLibrary.simpleMessage("Statut"),
     "csNewGroupButton" : MessageLookupByLibrary.simpleMessage("Nouveau groupe"),
     "csSearch" : MessageLookupByLibrary.simpleMessage("Nom ou adresse de courrier électronique"),
-    "osButton" : MessageLookupByLibrary.simpleMessage("Continuer"),
-    "osSubtitle" : MessageLookupByLibrary.simpleMessage("Une application de messagerie open source développée avec Flutter")
+    "isButton" : MessageLookupByLibrary.simpleMessage("Continuer"),
+    "isDescription" : MessageLookupByLibrary.simpleMessage("Inscrivez-vous, invitez des amis et commencez à discuter en ligne..."),
+    "isSubtitle" : MessageLookupByLibrary.simpleMessage("Une application de messagerie open source développée avec Flutter et Cloud Firestore")
   };
 }

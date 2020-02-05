@@ -12,7 +12,7 @@ part 'contacts_state.dart';
 
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   ContactsBloc({@required CacheRepositoryContactsInterface cache}) : _cache = cache {
-    _cacheSub = _cache.readUnregisteredUsers().listen(
+    _cacheSub = _cache.readContacts().listen(
       (List<UserModel> contacts) {
         add(ContactsReceivedFromCache(contacts));
       },
@@ -38,7 +38,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> mapAddContactEventToState(AddContact event) async* {
     try {
-      await _cache.addUnregisteredUser(event.contact);
+      await _cache.addContact(event.contact);
     } catch (e) {
       yield ContactsError(AppException.from(e));
     }

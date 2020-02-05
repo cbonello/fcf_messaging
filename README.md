@@ -16,6 +16,12 @@ flutter pub run flutter_launcher_icons:main
 
 See [flutter_launcher_icons package](https://pub.dev/packages/flutter_launcher_icons).
 
+## Hive generator
+
+```bash
+flutter packages pub run build_runner build --delete-conflicting-outputs
+```
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

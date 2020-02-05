@@ -10,9 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key key, @required this.authenticatedUser}) : super(key: key);
+  const HomeScreen({Key key, @required RegisteredUserModel authenticatedUser})
+      : _authenticatedUser = authenticatedUser,
+        super(key: key);
 
-  final RegisteredUserModel authenticatedUser;
+  final RegisteredUserModel _authenticatedUser;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -43,14 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 BlocProvider<ChatsBloc>(
                   create: (BuildContext context) => ChatsBloc(
-                    user: widget.authenticatedUser,
-                    cache: CacheRepository(user: widget.authenticatedUser)..init(),
+                    user: widget._authenticatedUser,
+                    cache: CacheRepository(authenticatedUser: widget._authenticatedUser)
+                      ..init(),
                   ),
-                  child: ChatsTab(authenticatedUser: widget.authenticatedUser),
+                  child: ChatsTab(authenticatedUser: widget._authenticatedUser),
                 ),
-                ContactsTab(authenticatedUser: widget.authenticatedUser),
-                StatusTab(authenticatedUser: widget.authenticatedUser),
-                NotificationsTab(authenticatedUser: widget.authenticatedUser),
+                ContactsTab(authenticatedUser: widget._authenticatedUser),
+                StatusTab(authenticatedUser: widget._authenticatedUser),
+                NotificationsTab(authenticatedUser: widget._authenticatedUser),
               ],
             ),
             bottomNavigationBar: _BottomNavbar(

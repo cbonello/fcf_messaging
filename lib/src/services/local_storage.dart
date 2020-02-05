@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalStorageServiceInterface {
-  bool getDisplayOnboarding();
-  Future<bool> setDisplayOnboarding(bool displayOnboarding);
+  bool getDisplayIntroScreen();
+  Future<bool> setDisplayIntroScreen(bool displayOnboarding);
 }
 
 class LocalStorageService implements LocalStorageServiceInterface {
@@ -16,18 +16,18 @@ class LocalStorageService implements LocalStorageServiceInterface {
   }
 
   @override
-  bool getDisplayOnboarding() {
-    bool displayOnboarding;
+  bool getDisplayIntroScreen() {
+    bool displayIntroScreen;
     try {
-      displayOnboarding = _preferences.getBool('display_onboarding') ?? true;
+      displayIntroScreen = _preferences.getBool('display_intro_screen') ?? true;
     } catch (_) {
-      displayOnboarding = true;
+      displayIntroScreen = true;
     }
-    return displayOnboarding;
+    return displayIntroScreen;
   }
 
   @override
-  Future<bool> setDisplayOnboarding(bool displayOnboarding) {
-    return _preferences.setBool('display_onboarding', displayOnboarding);
+  Future<bool> setDisplayIntroScreen(bool displayOnboarding) {
+    return _preferences.setBool('display_intro_screen', displayOnboarding);
   }
 }

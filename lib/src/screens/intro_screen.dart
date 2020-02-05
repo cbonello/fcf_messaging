@@ -1,9 +1,10 @@
 import 'package:fcf_messaging/src/blocs/authentication/authentication_bloc.dart';
+import 'package:fcf_messaging/src/screens/widgets/horizontal_line.dart';
 import 'package:fcf_messaging/src/services/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthenticationBloc authenticationBloc = context.bloc<AuthenticationBloc>();
@@ -28,7 +29,24 @@ class OnboardingScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40.0),
                 Text(
-                  context.l10n().osSubtitle,
+                  context.l10n().isSubtitle,
+                  style: const TextStyle(fontSize: 28.0),
+                  textAlign: TextAlign.center,
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(vertical: 25.0),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.5,
+                    child: Row(
+                      children: const <Widget>[
+                        Expanded(child: HorizontalLine()),
+                      ],
+                    ),
+                  ),
+                ),
+                Text(
+                  context.l10n().isDescription,
                   style: const TextStyle(fontSize: 28.0),
                   textAlign: TextAlign.center,
                 ),
@@ -38,11 +56,11 @@ class OnboardingScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40.0),
                   ),
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(25.0),
                   onPressed: () => authenticationBloc.add(StartAuthentication()),
                   child: Text(
-                    context.l10n().osButton,
-                    style: const TextStyle(color: Colors.white, fontSize: 24.0),
+                    context.l10n().isButton,
+                    style: const TextStyle(color: Colors.white, fontSize: 26.0),
                   ),
                 ),
               ],

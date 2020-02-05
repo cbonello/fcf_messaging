@@ -6,8 +6,7 @@ import 'package:fcf_messaging/src/models/message_model.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
 import 'package:fcf_messaging/src/repositories/hive/models/hive_chat_model.dart';
 import 'package:fcf_messaging/src/repositories/hive/models/hive_message_model.dart';
-import 'package:fcf_messaging/src/repositories/hive/models/hive_registered_user_model.dart';
-import 'package:fcf_messaging/src/repositories/hive/models/hive_unregistered_user_model.dart';
+import 'package:fcf_messaging/src/repositories/hive/models/hive_user_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
@@ -21,11 +20,13 @@ abstract class IHiveRepositoryChats {
   Future<int> clearChats();
 }
 
-abstract class IHiveRepositoryUnregisteredUsers {
-  Future<void> addUnregisteredUser(UnregisteredUserModel unregisteredUser);
-  Future<void> addUnregisteredUsers(List<UnregisteredUserModel> unregisteredUsers);
-  Future<List<UnregisteredUserModel>> readUnregisteredUsers();
-  Future<int> clearUnregisteredUsers();
+abstract class IHiveRepositoryUsers {
+  Future<void> addUser(UserModel user);
+  Future<void> addUsers(List<UserModel> users);
+  Future<UserModel> readUser(String email);
+  Future<List<UserModel>> readUsers();
+  Future<void> updateUser(UserModel user);
+  Future<int> clearUsers();
 }
 
 abstract class IHiveRepositoryLastMessages {
@@ -35,31 +36,28 @@ abstract class IHiveRepositoryLastMessages {
 }
 
 class HiveRepository
-    implements
-        IHiveRepositoryChats,
-        IHiveRepositoryUnregisteredUsers,
-        IHiveRepositoryLastMessages {
+    implements IHiveRepositoryChats, IHiveRepositoryUsers, IHiveRepositoryLastMessages {
   HiveRepository({@required Directory documentDir}) : _documentDir = documentDir {
     if (!kIsWeb) {
       Hive.init(_documentDir.path);
     }
     Hive.registerAdapter(HiveChatModelAdapter());
     Hive.registerAdapter(HiveMessageModelAdapter());
-    Hive.registerAdapter(HiveRegisteredUserModelAdapter());
-    Hive.registerAdapter(HiveUnregisteredUserModelAdapter());
+    Hive.registerAdapter(HiveUserModelAdapter());
   }
 
   final Directory _documentDir;
   LazyBox<HiveChatModel> _chatsBox;
-  LazyBox<HiveUnregisteredUserModel> _unregisteredUsersBox;
+  LazyBox<HiveUserModel> _usersBox;
   LazyBox<HiveMessageModel> _messagesBox;
 
   Future<void> openBoxes() async {
     _chatsBox = await Hive.openLazyBox<HiveChatModel>('chats');
     await _chatsBox.clear();
-    _unregisteredUsersBox =
-        await Hive.openLazyBox<HiveUnregisteredUserModel>('unregistered_users');
-    await _unregisteredUsersBox.clear();
+
+    _usersBox = await Hive.openLazyBox<HiveUserModel>('users');
+    await _usersBox.clear();
+
     _messagesBox = await Hive.openLazyBox<HiveMessageModel>('messages');
     await _messagesBox.clear();
   }
@@ -105,6 +103,7 @@ class HiveRepository
 
   @override
   Future<void> updateChat(ChatModel chat) async {
+    assert(_chatsBox.isOpen);
     final String key = chat.documentID;
     await _chatsBox.delete(key);
     final HiveChatModel hiveChat = HiveChatModel.fromChatModel(chat);
@@ -120,35 +119,55 @@ class HiveRepository
   // IHiveRepositoryContacts
 
   @override
-  Future<void> addUnregisteredUser(UnregisteredUserModel unregisteredUser) async {
-    assert(_unregisteredUsersBox.isOpen);
-    final HiveUnregisteredUserModel hiveUnregisteredUser =
-        HiveUnregisteredUserModel.fromUnregisteredUserModel(unregisteredUser);
-    await _unregisteredUsersBox.put(hiveUnregisteredUser.hashCode, hiveUnregisteredUser);
-  }
-
-  @override
-  Future<void> addUnregisteredUsers(List<UnregisteredUserModel> unregisteredUsers) async {
-    await clearUnregisteredUsers();
-    unregisteredUsers.forEach(addUnregisteredUser);
-  }
-
-  @override
-  Future<List<UnregisteredUserModel>> readUnregisteredUsers() async {
-    assert(_unregisteredUsersBox.isOpen);
-    final List<UnregisteredUserModel> unregisteredUsers = <UnregisteredUserModel>[];
-    for (int i = 0; i < _unregisteredUsersBox.length; i++) {
-      final HiveUnregisteredUserModel hiveContact = await _unregisteredUsersBox.getAt(i);
-      final UnregisteredUserModel contact = hiveContact.toUnregisteredUserModel();
-      unregisteredUsers.add(contact);
+  Future<void> addUser(UserModel user) async {
+    assert(_usersBox.isOpen);
+    final String key = user.email;
+    if (_usersBox.containsKey(key)) {
+      await _usersBox.delete(key);
     }
-    return unregisteredUsers;
+    final HiveUserModel hiveUser = HiveUserModel.fromUserModel(user);
+    await _usersBox.put(key, hiveUser);
   }
 
   @override
-  Future<int> clearUnregisteredUsers() async {
-    assert(_unregisteredUsersBox.isOpen);
-    return await _unregisteredUsersBox.clear();
+  Future<void> addUsers(List<UserModel> users) async {
+    await clearUsers();
+    users.forEach(addUser);
+  }
+
+  @override
+  Future<UserModel> readUser(String email) async {
+    assert(_usersBox.isOpen);
+    final HiveUserModel hiveUser = await _usersBox.get(email);
+    final UserModel user = hiveUser?.toUserModel();
+    return user;
+  }
+
+  @override
+  Future<List<UserModel>> readUsers() async {
+    assert(_usersBox.isOpen);
+    final List<UserModel> users = <UserModel>[];
+    for (int i = 0; i < _usersBox.length; i++) {
+      final HiveUserModel hiveUser = await _usersBox.getAt(i);
+      final UserModel user = hiveUser.toUserModel();
+      users.add(user);
+    }
+    return users;
+  }
+
+  @override
+  Future<void> updateUser(UserModel user) async {
+    assert(_usersBox.isOpen);
+    final String key = user.email;
+    await _usersBox.delete(key);
+    final HiveUserModel hiveUser = HiveUserModel.fromUserModel(user);
+    await _usersBox.put(key, hiveUser);
+  }
+
+  @override
+  Future<int> clearUsers() async {
+    assert(_usersBox.isOpen);
+    return await _usersBox.clear();
   }
 
   // IHiveRepositoryLastMessages
@@ -179,7 +198,7 @@ class HiveRepository
 
   Future<void> dispose() async {
     await _messagesBox.compact();
-    await _unregisteredUsersBox.compact();
+    await _usersBox.compact();
     await _chatsBox.compact();
     await Hive.close();
   }

@@ -12,7 +12,7 @@ class Uninitialized extends AuthenticationState {}
 
 class DisplaySplashScreen extends AuthenticationState {}
 
-class DisplayOnboarding extends AuthenticationState {}
+class DisplayIntroScreen extends AuthenticationState {}
 
 class Authenticated extends AuthenticationState {
   const Authenticated({@required this.user}) : assert(user != null);

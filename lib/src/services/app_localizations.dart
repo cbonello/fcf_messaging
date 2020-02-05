@@ -34,11 +34,13 @@ class AppLocalizations {
 
   String get appTitle => Intl.message('FCF Messaging', name: 'appTitle');
 
-  // Onboarding screen
-  String get osSubtitle =>
-      Intl.message('An open source messaging app developed with Flutter',
-          name: 'osSubtitle');
-  String get osButton => Intl.message('Continue', name: 'osButton');
+  // Intro screen
+  String get isSubtitle => Intl.message(
+      'An open source messaging app developed with Flutter and Cloud Firestore',
+      name: 'isSubtitle');
+  String get isDescription =>
+      Intl.message('Sign up, invite friends and start talking...', name: 'isDescription');
+  String get isButton => Intl.message('Continue', name: 'isButton');
 
   // Bottom navigation bar
   String get bnvChats => Intl.message('Chats', name: 'bnvChats');

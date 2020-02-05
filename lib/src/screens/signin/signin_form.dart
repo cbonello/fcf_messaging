@@ -1,6 +1,7 @@
 import 'package:fcf_messaging/src/blocs/authentication/authentication_bloc.dart';
 import 'package:fcf_messaging/src/blocs/signin/signin_bloc.dart';
 import 'package:fcf_messaging/src/screens/widgets/form_fields.dart';
+import 'package:fcf_messaging/src/screens/widgets/horizontal_line.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
@@ -121,13 +122,13 @@ class _SigninFormState extends State<SigninForm>
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Row(
-                            children: <Widget>[
-                              Expanded(child: _HorizontalLine()),
-                              const Padding(
+                            children: const <Widget>[
+                              Expanded(child: HorizontalLine()),
+                              Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                                 child: Text('OR'),
                               ),
-                              Expanded(child: _HorizontalLine()),
+                              Expanded(child: HorizontalLine()),
                             ],
                           ),
                         ),
@@ -200,14 +201,4 @@ class _SigninFormState extends State<SigninForm>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class _HorizontalLine extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 1.0,
-      color: Colors.black,
-    );
-  }
 }

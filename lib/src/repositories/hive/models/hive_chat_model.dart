@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcf_messaging/src/models/chat_model.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
-import 'package:fcf_messaging/src/repositories/hive/models/hive_registered_user_model.dart';
+import 'package:fcf_messaging/src/repositories/hive/models/hive_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -23,9 +23,8 @@ class HiveChatModel extends HiveObject {
       documentID: chat.documentID,
       private: chat.private,
       members: chat.members
-          .map<HiveRegisteredUserModel>(
-            (RegisteredUserModel member) =>
-                HiveRegisteredUserModel.fromRegisteredUserModel(member),
+          .map<HiveUserModel>(
+            (RegisteredUserModel member) => HiveUserModel.fromUserModel(member),
           )
           .toList(),
       name: chat.name,
@@ -35,9 +34,8 @@ class HiveChatModel extends HiveObject {
   }
 
   ChatModel toChatModel() {
-    final List<RegisteredUserModel> chatMembers = members
-        .map((HiveRegisteredUserModel hiveMember) => hiveMember.toRegisteredUserModel())
-        .toList();
+    final List<RegisteredUserModel> chatMembers =
+        members.map((HiveUserModel hiveMember) => hiveMember.toUserModel()).toList();
     chatMembers.sort(
       (RegisteredUserModel m1, RegisteredUserModel m2) => m1.userID.compareTo(m2.userID),
     );
@@ -59,7 +57,7 @@ class HiveChatModel extends HiveObject {
   final bool private;
 
   @HiveField(2)
-  final List<HiveRegisteredUserModel> members;
+  final List<HiveUserModel> members;
 
   @HiveField(3)
   final String name;

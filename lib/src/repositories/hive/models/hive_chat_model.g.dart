@@ -19,7 +19,7 @@ class HiveChatModelAdapter extends TypeAdapter<HiveChatModel> {
     return HiveChatModel(
       documentID: fields[0] as String,
       private: fields[1] as bool,
-      members: (fields[2] as List)?.cast<HiveRegisteredUserModel>(),
+      members: (fields[2] as List)?.cast<HiveUserModel>(),
       name: fields[3] as String,
       photoUrl: fields[4] as String,
       createdAt: fields[5] as String,

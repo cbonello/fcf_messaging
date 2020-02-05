@@ -39,12 +39,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
-    yield DisplaySplashScreen();
-    await Future<void>.delayed(const Duration(seconds: 3), () {});
-    if (_prefs.getDisplayOnboarding() == true) {
-      await _prefs.setDisplayOnboarding(false);
-      yield DisplayOnboarding();
+    if (_prefs.getDisplayIntroScreen() == true) {
+      await _prefs.setDisplayIntroScreen(false);
+      yield DisplayIntroScreen();
     } else {
+      yield DisplaySplashScreen();
+      await Future<void>.delayed(const Duration(seconds: 2), () {});
       add(StartAuthentication());
     }
   }
