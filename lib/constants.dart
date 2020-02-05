@@ -1,5 +1,6 @@
 const String APP_NAME = 'FCF Messaging';
 const String APP_COPYRIGHT = '©2020, C. Bonello';
+const String APP_ASSET_LOGO = 'assets/images/app_logo.png';
 
 const int MIN_PASSWORD_LENGTH = 8;
 const double MIN_PASSWORD_STRENGTH = 0.5;

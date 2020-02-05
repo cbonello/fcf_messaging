@@ -1,3 +1,4 @@
+import 'package:fcf_messaging/constants.dart';
 import 'package:fcf_messaging/src/blocs/authentication/authentication_bloc.dart';
 import 'package:fcf_messaging/src/screens/widgets/horizontal_line.dart';
 import 'package:fcf_messaging/src/services/app_localizations.dart';
@@ -17,11 +18,7 @@ class IntroScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Image(
-                  height: 120.0,
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/images/app_logo.png'),
-                ),
+                Image(height: 120.0, fit: BoxFit.fill, image: AssetImage(APP_ASSET_LOGO)),
                 const SizedBox(height: 10.0),
                 Text(
                   context.l10n().appTitle,

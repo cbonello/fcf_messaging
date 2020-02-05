@@ -1,3 +1,4 @@
+import 'package:fcf_messaging/constants.dart';
 import 'package:fcf_messaging/src/blocs/signin/signin_bloc.dart';
 import 'package:fcf_messaging/src/blocs/signup/signup_bloc.dart';
 import 'package:fcf_messaging/src/screens/signin/signin_form.dart';
@@ -51,9 +52,6 @@ class _SigninScreenState extends State<SigninScreen> {
                 color: Colors.transparent,
                 width: MediaQuery.of(context).size.width,
                 height: 800.0,
-                // MediaQuery.of(context).size.height >= 775.0
-                //     ? MediaQuery.of(context).size.height
-                //     : 775.0,
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
@@ -63,10 +61,9 @@ class _SigninScreenState extends State<SigninScreen> {
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 50.0),
                           child: Image(
-                            // width: 250.0,
                             height: 120.0,
                             fit: BoxFit.fill,
-                            image: AssetImage('assets/images/app_logo.png'),
+                            image: AssetImage(APP_ASSET_LOGO),
                           ),
                         ),
                         const SizedBox(width: 10.0),
