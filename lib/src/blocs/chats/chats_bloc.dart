@@ -37,18 +37,22 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     ChatsEvent event,
   ) async* {
     if (event is AddChat) {
-      yield* mapAddChatEventToState(event);
+      yield* mapAddChatEventToState(event.members, event.name, event.photoUrl);
     } else if (event is ChatsReceivedFromCache) {
-      yield* mapChatsReceivedFromCacheEventToState(event);
+      yield* mapChatsReceivedFromCacheEventToState(event.chats);
     }
   }
 
-  Stream<ChatsState> mapAddChatEventToState(AddChat event) async* {
+  Stream<ChatsState> mapAddChatEventToState(
+    List<RegisteredUserModel> members,
+    String name,
+    String photoUrl,
+  ) async* {
     try {
       await _cache.addChat(
-        members: event.members,
-        name: event.name,
-        photoUrl: event.photoUrl,
+        members: members,
+        name: name,
+        photoUrl: photoUrl,
       );
     } catch (e) {
       yield ChatsError(AppException.from(e));
@@ -56,10 +60,10 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   }
 
   Stream<ChatsState> mapChatsReceivedFromCacheEventToState(
-    ChatsReceivedFromCache event,
+    List<ChatWithLastMessageModel> chats,
   ) async* {
     try {
-      event.chats.sort((ChatWithLastMessageModel a, ChatWithLastMessageModel b) {
+      chats.sort((ChatWithLastMessageModel a, ChatWithLastMessageModel b) {
         final MessageModel lma = a.lastMessage;
         final MessageModel lmb = b.lastMessage;
         if (lma == null) {
@@ -70,7 +74,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         }
         return lma.timestamp.compareTo(lmb.timestamp);
       });
-      yield ChatsFetched(event.chats);
+      yield ChatsFetched(chats);
     } catch (e) {
       yield ChatsError(AppException.from(e));
     }

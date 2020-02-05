@@ -39,26 +39,25 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
     MessagesEvent event,
   ) async* {
     if (event is FetchMessagesEvent) {
-      yield* mapFetchMessagesEventToState(event);
+      yield* mapFetchMessagesEventToState(event.chatId);
     }
     if (event is ReceivedFirstMessagesEvent) {
       yield MessagesFetched(event.messages, false);
     }
     if (event is FetchPreviousMessagesEvent) {
-      yield* mapFetchPreviousMessagesEventToState(event);
+      yield* mapFetchPreviousMessagesEventToState(event.chat, event.lastMessage);
     }
     if (event is SendTextMessageEvent) {
-      yield* mapSendTextMessageEventToState(event);
+      yield* mapSendTextMessageEventToState(event.chatId, event.sender, event.text);
     }
     if (event is SendImageMessageEvent) {
-      yield* mapSendImageMessageEventToState(event);
+      yield* mapSendImageMessageEventToState(event.chatId, event.sender, event.imageFile);
     }
   }
 
-  Stream<MessagesState> mapFetchMessagesEventToState(FetchMessagesEvent event) async* {
+  Stream<MessagesState> mapFetchMessagesEventToState(String chatId) async* {
     try {
       yield FetchingMessage();
-      final String chatId = event.chatId;
       await _messagesSubscription[chatId]?.cancel();
       _messagesSubscription[chatId] = _cache.getFirstChatMessages(chatId).listen(
             (List<MessageModel> messages) => add(ReceivedFirstMessagesEvent(messages)),
@@ -69,12 +68,13 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
   }
 
   Stream<MessagesState> mapFetchPreviousMessagesEventToState(
-    FetchPreviousMessagesEvent event,
+    ChatModel chat,
+    MessageModel lastMessage,
   ) async* {
     try {
-      final String chatId = event.chat.documentID;
+      final String chatId = chat.documentID;
       final List<MessageModel> messages =
-          await _cache.getPreviousChatMessages(chatId, event.lastMessage);
+          await _cache.getPreviousChatMessages(chatId, lastMessage);
       yield MessagesFetched(messages, true);
     } on AppException catch (exception) {
       yield MessagesError(exception);
@@ -82,28 +82,32 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
   }
 
   Stream<MessagesState> mapSendTextMessageEventToState(
-    SendTextMessageEvent event,
+    String chatId,
+    RegisteredUserModel sender,
+    String text,
   ) async* {
     yield SendingMessage();
     try {
-      unawaited(_cache.sendTextMessage(event.chatId, event.sender, event.text));
+      unawaited(_cache.sendTextMessage(chatId, sender, text));
       yield MessageSent();
     } on TimeoutException {
-      _messagesSubscription[event.chatId]?.resume();
+      _messagesSubscription[chatId]?.resume();
     } catch (exception) {
       yield MessagesError(AppException.from(exception));
     }
   }
 
   Stream<MessagesState> mapSendImageMessageEventToState(
-    SendImageMessageEvent event,
+    String chatId,
+    RegisteredUserModel sender,
+    File imageFile,
   ) async* {
     yield SendingMessage();
     try {
-      unawaited(_cache.sendImageMessage(event.chatId, event.sender, event.imageFile));
+      unawaited(_cache.sendImageMessage(chatId, sender, imageFile));
       yield MessageSent();
     } on TimeoutException {
-      _messagesSubscription[event.chatId]?.resume();
+      _messagesSubscription[chatId]?.resume();
     } catch (exception) {
       yield MessagesError(AppException.from(exception));
     }

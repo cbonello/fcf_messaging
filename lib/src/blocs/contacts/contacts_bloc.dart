@@ -30,28 +30,26 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     ContactsEvent event,
   ) async* {
     if (event is AddContact) {
-      yield* mapAddContactEventToState(event);
+      yield* mapAddContactEventToState(event.contact);
     } else if (event is ContactsReceivedFromCache) {
-      yield* mapContactsReceivedFromCacheEventToState(event);
+      yield* mapContactsReceivedFromCacheEventToState(event.contacts);
     }
   }
 
-  Stream<ContactsState> mapAddContactEventToState(AddContact event) async* {
+  Stream<ContactsState> mapAddContactEventToState(UserModel contact) async* {
     try {
-      await _cache.addContact(event.contact);
+      await _cache.addContact(contact);
     } catch (e) {
       yield ContactsError(AppException.from(e));
     }
   }
 
   Stream<ContactsState> mapContactsReceivedFromCacheEventToState(
-    ContactsReceivedFromCache event,
+    List<UserModel> contacts,
   ) async* {
     try {
-      event.contacts.sort((UserModel a, UserModel b) {
-        return a.name.compareTo(b.name);
-      });
-      yield ContactsFetched(event.contacts);
+      contacts.sort((UserModel a, UserModel b) => a.name.compareTo(b.name));
+      yield ContactsFetched(contacts);
     } catch (e) {
       yield ContactsError(AppException.from(e));
     }

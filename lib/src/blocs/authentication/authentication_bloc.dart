@@ -30,9 +30,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
     } else if (event is StartAuthentication) {
-      yield* _mapAuthenticateToState(event);
+      yield* _mapAuthenticateToState();
     } else if (event is SignedIn) {
-      yield* _mapSignedInToState(event);
+      yield* _mapSignedInToState(event.user);
     } else if (event is SignedOut) {
       yield* _mapSignedOutToState();
     }
@@ -49,7 +49,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
   }
 
-  Stream<AuthenticationState> _mapAuthenticateToState(StartAuthentication event) async* {
+  Stream<AuthenticationState> _mapAuthenticateToState() async* {
     try {
       final RegisteredUserModel user =
           await _authenticationRepository.signInWithCurrentUser();
@@ -63,8 +63,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
   }
 
-  Stream<AuthenticationState> _mapSignedInToState(SignedIn event) async* {
-    yield Authenticated(user: event.user);
+  Stream<AuthenticationState> _mapSignedInToState(RegisteredUserModel user) async* {
+    yield Authenticated(user: user);
     await _firebaseAnalytics.logLogin();
   }
 
