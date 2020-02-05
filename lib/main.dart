@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:fcf_messaging/app.dart';
 import 'package:fcf_messaging/src/blocs/authentication/authentication_bloc.dart';
 import 'package:fcf_messaging/src/blocs/simple_bloc_delegate.dart';
@@ -43,7 +44,11 @@ void runMessagingApp() {
           firebaseAnalytics: firebaseAnalytics,
         )..add(AppStarted());
       },
-      child: App(),
+      child: isInDebugMode
+          ? DevicePreview(
+              builder: (BuildContext context) => App(),
+            )
+          : App(),
     ),
   );
 }
