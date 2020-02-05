@@ -70,6 +70,12 @@ class ChatModel extends Equatable {
   bool get isDirect => members.length == 2;
   bool get isGroup => members.length > 2;
 
+  List<RegisteredUserModel> contacts(RegisteredUserModel authenticatedUser) {
+    return members
+        .where((RegisteredUserModel user) => user != authenticatedUser)
+        .toList();
+  }
+
   @override
   String toString() {
     return '''ChatModel {

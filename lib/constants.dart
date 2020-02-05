@@ -8,6 +8,10 @@ const double MIN_PASSWORD_STRENGTH = 0.5;
 const Duration DEFAULT_NETWORK_TIMEOUT = Duration(seconds: 15);
 const Duration DEFAULT_MESSAGE_SEND_TIMEOUT = Duration(seconds: 5);
 
+const String DATE_FORMAT_MONTH = 'MMM d';
+const String DATE_FORMAT_TIME = 'H:mm a';
+const String DATE_FORMAT = '$DATE_FORMAT_MONTH, $DATE_FORMAT_TIME';
+
 const int MAX_CHATS = 128;
 const int MAX_CONTACTS = 256;
 
