@@ -1,4 +1,4 @@
-const String APP_NAME = 'HTB-Messaging';
+const String APP_NAME = 'FCF Messaging';
 const String APP_COPYRIGHT = '©2020, C. Bonello';
 
 const int MIN_PASSWORD_LENGTH = 8;

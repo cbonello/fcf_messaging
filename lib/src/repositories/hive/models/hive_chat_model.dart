@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcf_messaging/src/models/chat_model.dart';
+import 'package:fcf_messaging/src/models/user_model.dart';
+import 'package:fcf_messaging/src/repositories/hive/models/hive_registered_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -21,8 +23,9 @@ class HiveChatModel extends HiveObject {
       documentID: chat.documentID,
       private: chat.private,
       members: chat.members
-          .map<HiveChatMemberModel>(
-            (ChatMember cmd) => HiveChatMemberModel.fromChatMember(cmd),
+          .map<HiveRegisteredUserModel>(
+            (RegisteredUserModel member) =>
+                HiveRegisteredUserModel.fromRegisteredUserModel(member),
           )
           .toList(),
       name: chat.name,
@@ -32,10 +35,11 @@ class HiveChatModel extends HiveObject {
   }
 
   ChatModel toChatModel() {
-    final List<ChatMember> chatMembers =
-        members.map((HiveChatMemberModel ldcmd) => ldcmd.toChatMember()).toList();
+    final List<RegisteredUserModel> chatMembers = members
+        .map((HiveRegisteredUserModel hiveMember) => hiveMember.toRegisteredUserModel())
+        .toList();
     chatMembers.sort(
-      (ChatMember m1, ChatMember m2) => m1.userID.compareTo(m2.userID),
+      (RegisteredUserModel m1, RegisteredUserModel m2) => m1.userID.compareTo(m2.userID),
     );
 
     return ChatModel(
@@ -55,7 +59,7 @@ class HiveChatModel extends HiveObject {
   final bool private;
 
   @HiveField(2)
-  final List<HiveChatMemberModel> members;
+  final List<HiveRegisteredUserModel> members;
 
   @HiveField(3)
   final String name;
@@ -75,54 +79,6 @@ class HiveChatModel extends HiveObject {
       name: "$name",
       photoUrl: "$photoUrl",
       createdAt: "$createdAt",
-    }''';
-  }
-}
-
-@HiveType(typeId: 1)
-class HiveChatMemberModel extends HiveObject {
-  HiveChatMemberModel({
-    @required this.userID,
-    @required this.name,
-    this.photoUrl,
-    @required this.status,
-  });
-
-  factory HiveChatMemberModel.fromChatMember(ChatMember cmd) {
-    return HiveChatMemberModel(
-      userID: cmd.userID,
-      name: cmd.name,
-      photoUrl: cmd.photoUrl,
-      status: cmd.status,
-    );
-  }
-
-  ChatMember toChatMember() => ChatMember(
-        userID: userID,
-        name: name,
-        photoUrl: photoUrl,
-        status: status,
-      );
-
-  @HiveField(0)
-  final String userID;
-
-  @HiveField(1)
-  final String name;
-
-  @HiveField(2)
-  final String photoUrl;
-
-  @HiveField(3)
-  final String status;
-
-  @override
-  String toString() {
-    return '''HiveChatMemberModel {
-      userID: "$userID",
-      name: "$name",
-      photoUrl: "#$photoUrl",
-      status: "$status",
     }''';
   }
 }

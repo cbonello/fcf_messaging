@@ -25,6 +25,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "bnvChats" : MessageLookupByLibrary.simpleMessage("Chats"),
     "bnvContacts" : MessageLookupByLibrary.simpleMessage("Contacts"),
     "bnvNotifications" : MessageLookupByLibrary.simpleMessage("Notifications"),
-    "bnvStatus" : MessageLookupByLibrary.simpleMessage("Status")
+    "bnvStatus" : MessageLookupByLibrary.simpleMessage("Status"),
+    "csNewGroupButton" : MessageLookupByLibrary.simpleMessage("New group"),
+    "csSearch" : MessageLookupByLibrary.simpleMessage("Name or email address"),
+    "osButton" : MessageLookupByLibrary.simpleMessage("Continue"),
+    "osSubtitle" : MessageLookupByLibrary.simpleMessage("An open source messaging app developed with Flutter")
   };
 }

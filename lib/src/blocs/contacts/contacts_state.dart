@@ -14,7 +14,7 @@ class FetchingContacts extends ContactsState {}
 class ContactsFetched extends ContactsState {
   const ContactsFetched(this.contacts);
 
-  final List<ContactModel> contacts;
+  final List<UserModel> contacts;
 
   @override
   List<Object> get props => <Object>[contacts];

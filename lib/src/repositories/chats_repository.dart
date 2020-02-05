@@ -5,6 +5,7 @@ import 'package:fcf_messaging/constants.dart';
 import 'package:fcf_messaging/src/models/chat_model.dart';
 
 abstract class ChatsRepositoryInterface {
+  String generateDocumentID();
   Future<void> addChat(ChatModel chat);
   Stream<List<ChatModel>> readChats(String uid);
 }
@@ -18,6 +19,7 @@ class ChatsRepository implements ChatsRepositoryInterface {
   final Firestore _firestoreService;
   final Duration timeout;
 
+  @override
   String generateDocumentID() {
     return _firestoreService.collection(CHATS_PATH).document().documentID;
   }

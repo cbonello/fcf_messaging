@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fcf_messaging/src/models/user_model.dart';
 import 'package:meta/meta.dart';
 
 class ChatModel extends Equatable {
@@ -16,16 +17,21 @@ class ChatModel extends Equatable {
 
   factory ChatModel.fromJson(String documentID, Map<String, dynamic> json) {
     assert(json['members'] != null);
-    final List<ChatMember> members = List<ChatMember>.from(
+    final List<RegisteredUserModel> members = List<RegisteredUserModel>.from(
       json['members'].map(
-        (dynamic m) => ChatMember.fromJson(Map<String, dynamic>.from(m)),
+        (dynamic m) {
+          final Map<String, dynamic> json = Map<String, dynamic>.from(m);
+          final String userID = json['userID'];
+          assert(userID != null);
+          return RegisteredUserModel.fromJson(userID, json);
+        },
       ),
     );
 
     // <Object>[obj1, obj2] and <Object>[obj2, obj1] are not considered as equal by
-    // Equatable. Members are sorted to ensure equality.
+    // Equatable. Members are therefore sorted to ensure equality.
     members.sort(
-      (ChatMember m1, ChatMember m2) => m1.userID.compareTo(m2.userID),
+      (RegisteredUserModel m1, RegisteredUserModel m2) => m1.userID.compareTo(m2.userID),
     );
 
     final String name = json['name'];
@@ -43,21 +49,26 @@ class ChatModel extends Equatable {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'private': private,
-        'membersID': List<String>.from(members.map<String>((ChatMember m) => m.userID)),
-        'members': List<dynamic>.from(members.map<dynamic>((ChatMember m) => m.toJson())),
+        'membersID':
+            List<String>.from(members.map<String>((RegisteredUserModel m) => m.userID)),
+        'members': List<dynamic>.from(
+            members.map<dynamic>((RegisteredUserModel m) => m.toJson())),
         'name': name,
         'photoUrl': photoUrl,
         'createdAt': createdAt,
       };
 
   final bool private;
-  final List<ChatMember> members;
+  final List<RegisteredUserModel> members;
   final String documentID, name, photoUrl;
   final Timestamp createdAt;
 
   @override
   List<Object> get props =>
       <Object>[documentID, private, name, photoUrl, members, createdAt];
+
+  bool get isDirect => members.length == 2;
+  bool get isGroup => members.length > 2;
 
   @override
   String toString() {
@@ -68,46 +79,6 @@ class ChatModel extends Equatable {
       name,: "$name",
       photoUrl: "$photoUrl",
       createdAt: "$createdAt",
-    }''';
-  }
-}
-
-class ChatMember extends Equatable {
-  const ChatMember({
-    @required this.userID,
-    @required this.name,
-    this.photoUrl,
-    @required this.status,
-  });
-
-  factory ChatMember.fromJson(Map<String, dynamic> json) {
-    return ChatMember(
-      userID: json['userID'],
-      name: json['name'],
-      photoUrl: json['photoUrl'],
-      status: json['status'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'userID': userID,
-        'name': name,
-        'photoUrl': photoUrl,
-        'status': status,
-      };
-
-  final String userID, name, photoUrl, status;
-
-  @override
-  List<Object> get props => <Object>[userID, name, photoUrl, status];
-
-  @override
-  String toString() {
-    return '''ChatMember {
-      userID: "$userID",
-      name: "$name",
-      photoUrl: "#$photoUrl",
-      status: "$status",
     }''';
   }
 }

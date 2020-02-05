@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fcf_messaging/src/models/user_model.dart';
 import 'package:fcf_messaging/src/repositories/authentication_repository.dart';
+import 'package:fcf_messaging/src/services/local_storage.dart';
 import 'package:fcf_messaging/src/services/service_locator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:meta/meta.dart';
@@ -15,8 +16,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       : _firebaseAnalytics = firebaseAnalytics ?? FirebaseAnalytics();
 
   final FirebaseAnalytics _firebaseAnalytics;
-  final AuthenticationRepository _authenticationRepository =
-      locator<AuthenticationRepository>();
+  final LocalStorageServiceInterface _prefs = locator<LocalStorageServiceInterface>();
+  final AuthenticationRepositoryInterface _authenticationRepository =
+      locator<AuthenticationRepositoryInterface>();
 
   @override
   AuthenticationState get initialState => Uninitialized();
@@ -27,18 +29,32 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   ) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
+    } else if (event is StartAuthentication) {
+      yield* _mapAuthenticateToState(event);
     } else if (event is SignedIn) {
-      yield* _mapSignedInToState(event.user);
+      yield* _mapSignedInToState(event);
     } else if (event is SignedOut) {
       yield* _mapSignedOutToState();
     }
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
+    yield DisplaySplashScreen();
+    await Future<void>.delayed(const Duration(seconds: 3), () {});
+    if (_prefs.getDisplayOnboarding() == true) {
+      await _prefs.setDisplayOnboarding(false);
+      yield DisplayOnboarding();
+    } else {
+      add(StartAuthentication());
+    }
+  }
+
+  Stream<AuthenticationState> _mapAuthenticateToState(StartAuthentication event) async* {
     try {
-      final UserModel user = await _authenticationRepository.signInWithCurrentUser();
+      final RegisteredUserModel user =
+          await _authenticationRepository.signInWithCurrentUser();
       if (user != null) {
-        yield Authenticated(user);
+        yield Authenticated(user: user);
       } else {
         yield Unauthenticated();
       }
@@ -47,8 +63,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     }
   }
 
-  Stream<AuthenticationState> _mapSignedInToState(UserModel user) async* {
-    yield Authenticated(user);
+  Stream<AuthenticationState> _mapSignedInToState(SignedIn event) async* {
+    yield Authenticated(user: event.user);
     await _firebaseAnalytics.logLogin();
   }
 

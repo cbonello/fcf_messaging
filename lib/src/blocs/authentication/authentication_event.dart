@@ -10,10 +10,12 @@ abstract class AuthenticationEvent extends Equatable {
 
 class AppStarted extends AuthenticationEvent {}
 
-class SignedIn extends AuthenticationEvent {
-  const SignedIn({@required this.user});
+class StartAuthentication extends AuthenticationEvent {}
 
-  final UserModel user;
+class SignedIn extends AuthenticationEvent {
+  const SignedIn({@required this.user}) : assert(user != null);
+
+  final RegisteredUserModel user;
 
   @override
   List<Object> get props => <Object>[user];

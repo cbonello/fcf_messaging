@@ -1,8 +1,8 @@
 import 'package:fcf_messaging/constants.dart';
 import 'package:fcf_messaging/src/blocs/authentication/authentication_bloc.dart';
 import 'package:fcf_messaging/src/blocs/signup/signup_bloc.dart';
+import 'package:fcf_messaging/src/screens/widgets/form_fields.dart';
 import 'package:fcf_messaging/src/utils/validators.dart';
-import 'package:fcf_messaging/src/widgets/form_fields.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';

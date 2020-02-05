@@ -1,80 +1,103 @@
+import 'dart:typed_data';
+
+import 'package:contacts_service/contacts_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
-final List<Color> _backgroundColors = <Color>[
-  const Color(0xFF004D40),
-  const Color(0xFF689F38),
-  const Color(0xFF455A64),
-  const Color(0xFF5C6BC0),
-  const Color(0xFFC2185B),
-  const Color(0xFF34691E),
-  const Color(0xFF00579B),
-  const Color(0xFFF5501B),
-  const Color(0xFFB046BC),
-  const Color(0xFF0388D2),
-  const Color(0xFFEF6C00),
-  const Color(0xFFF3511D),
-  const Color(0xFFEC417A),
-  const Color(0xFF5D4138),
-  const Color(0xFF5D6AC0),
-  const Color(0xFFBE360B),
-  const Color(0xFF679F38),
-  const Color(0xFF7B1FA2),
-  const Color(0xFF435B63),
-  const Color(0xFF00897B),
-  const Color(0xFF77919D),
-];
-
-class UserModel extends Equatable {
+abstract class UserModel extends Equatable {
   const UserModel({
-    @required this.documentID,
-    @required this.email,
     @required this.name,
-    // New users that signed up with email/password don't have a photo URL.
-    this.photoUrl,
-    @required this.status,
-  })  : assert(documentID != null),
-        assert(email != null),
-        assert(name != null),
-        assert(status != null);
+    @required this.email,
+  })  : assert(name != null),
+        assert(email != null);
 
-  factory UserModel.fromJson(String documentID, Map<String, dynamic> json) {
-    return UserModel(
-      documentID: documentID,
-      email: json['email'],
+  final String name, email;
+
+  @override
+  List<Object> get props => <Object>[name, email];
+}
+
+class RegisteredUserModel extends UserModel implements Equatable {
+  const RegisteredUserModel({
+    @required this.userID,
+    @required String name,
+    @required String email,
+    @required this.status,
+    // New users who signed up with email and password don't have a profile picture.
+    this.photoUrl,
+  })  : assert(userID != null),
+        assert(status != null),
+        super(name: name, email: email);
+
+  factory RegisteredUserModel.fromJson(String userID, Map<String, dynamic> json) {
+    return RegisteredUserModel(
+      userID: userID,
       name: json['name'],
-      photoUrl: json['photoUrl'],
+      email: json['email'],
       status: json['status'],
+      photoUrl: json['photoUrl'],
     );
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'email': email,
+        'userID': userID,
         'name': name,
-        'photoUrl': photoUrl,
+        'email': email,
         'status': status,
+        'photoUrl': photoUrl,
       };
 
-  final String documentID, email, name, photoUrl, status;
+  final String userID, status, photoUrl;
 
   @override
-  List<Object> get props => <Object>[documentID, email, name, photoUrl, status];
-
-  // TODO(cbonello): maybe move to avatar file.
-  Color get color {
-    final int colorIndex = name.hashCode % _backgroundColors.length;
-    return _backgroundColors[colorIndex];
-  }
+  List<Object> get props => <Object>[userID, status, photoUrl];
 
   @override
   String toString() {
-    return '''UserModel {
-      documentID: "$documentID",
+    return '''RegisteredUserModel {
+      userID: "$userID",
       email: "$email",
       name: "$name",
-      photoUrl: "#$photoUrl",
       status: "$status",
+      photoUrl: "#$photoUrl",
+    }''';
+  }
+}
+
+class UnregisteredUserModel extends UserModel implements Equatable {
+  const UnregisteredUserModel({
+    @required String name,
+    @required String defaultEmail,
+    @required this.emails,
+    this.photo,
+  })  : assert(emails != null),
+        super(name: name, email: defaultEmail);
+
+  factory UnregisteredUserModel.fromContact(Contact contact, String defaultEmail) {
+    final List<String> emails = contact.emails.map((Item i) => i.value).toList()..sort();
+
+    return UnregisteredUserModel(
+      name: contact.displayName,
+      defaultEmail: defaultEmail,
+      emails: emails,
+      photo: contact.avatar,
+    );
+  }
+
+  final List<String> emails;
+  final Uint8List photo;
+
+  @override
+  List<Object> get props => <Object>[emails, photo];
+
+  @override
+  String toString() {
+    return '''UnregisteredUserModel {
+      name: "$name",
+      defaultEmail: "$email",
+      emails: [ $emails ],
+      photo: "#$photo",
     }''';
   }
 }

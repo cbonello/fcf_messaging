@@ -7,10 +7,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lumberdash/lumberdash.dart';
 
 abstract class AuthenticationRepositoryInterface {
-  Future<UserModel> signInWithCurrentUser();
-  Future<UserModel> signInWithEmailAndPassword({String email, String password});
-  Future<UserModel> signInWithGoogle();
-  Future<UserModel> signUp({String name, String email, String password});
+  Future<RegisteredUserModel> signInWithCurrentUser();
+  Future<RegisteredUserModel> signInWithEmailAndPassword({String email, String password});
+  Future<RegisteredUserModel> signInWithGoogle();
+  Future<RegisteredUserModel> signUp({String name, String email, String password});
   Future<void> signOut();
 }
 
@@ -28,11 +28,11 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
   final UsersRepository _usersRepository;
 
   @override
-  Future<UserModel> signInWithCurrentUser() async {
+  Future<RegisteredUserModel> signInWithCurrentUser() async {
     final FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
     if (firebaseUser != null) {
       try {
-        final UserModel user = await _usersRepository.getUser(firebaseUser.uid);
+        final RegisteredUserModel user = await _usersRepository.getUser(firebaseUser.uid);
         // await _firestoreService.updateActivity(user.email, true);
         return user;
       } catch (_) {
@@ -43,7 +43,8 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
   }
 
   @override
-  Future<UserModel> signInWithEmailAndPassword({String email, String password}) async {
+  Future<RegisteredUserModel> signInWithEmailAndPassword(
+      {String email, String password}) async {
     AuthResult authResult;
     try {
       authResult = await _firebaseAuth.signInWithEmailAndPassword(
@@ -58,7 +59,7 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
     }
     try {
       final FirebaseUser firebaseUser = authResult.user;
-      final UserModel user = await _usersRepository.getUser(firebaseUser.uid);
+      final RegisteredUserModel user = await _usersRepository.getUser(firebaseUser.uid);
       if (user != null) {
         // await _firestoreService.updateActivity(firebaseUser.uid, true);
       } else {
@@ -80,7 +81,7 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
   }
 
   @override
-  Future<UserModel> signInWithGoogle() async {
+  Future<RegisteredUserModel> signInWithGoogle() async {
     AuthResult authResult;
     try {
       final GoogleSignInAccount account = await _googleSignIn.signIn();
@@ -100,7 +101,7 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
     }
     try {
       final FirebaseUser firebaseUser = authResult.user;
-      UserModel user = await _usersRepository.getUser(firebaseUser.uid);
+      RegisteredUserModel user = await _usersRepository.getUser(firebaseUser.uid);
       user ??= await _usersRepository.setUser(
         firebaseUser.uid,
         firebaseUser.displayName,
@@ -115,7 +116,7 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
   }
 
   @override
-  Future<UserModel> signUp({String name, String email, String password}) async {
+  Future<RegisteredUserModel> signUp({String name, String email, String password}) async {
     AuthResult authResult;
     try {
       authResult = await _firebaseAuth.createUserWithEmailAndPassword(
@@ -131,7 +132,7 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
       if (await _usersRepository.isNewUser(firebaseUser.uid) == false) {
         throw const AppException('ERROR_EMAIL_ALREADY_IN_USE');
       }
-      final UserModel user = await _usersRepository.setUser(
+      final RegisteredUserModel user = await _usersRepository.setUser(
         firebaseUser.uid,
         name,
         email,

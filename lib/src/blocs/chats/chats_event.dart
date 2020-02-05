@@ -14,7 +14,7 @@ class AddChat extends ChatsEvent {
     this.photoUrl,
   });
 
-  final List<ChatMember> members;
+  final List<RegisteredUserModel> members;
   final String name, photoUrl;
 
   @override

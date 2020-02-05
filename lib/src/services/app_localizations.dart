@@ -34,11 +34,21 @@ class AppLocalizations {
 
   String get appTitle => Intl.message('FCF Messaging', name: 'appTitle');
 
+  // Onboarding screen
+  String get osSubtitle =>
+      Intl.message('An open source messaging app developed with Flutter',
+          name: 'osSubtitle');
+  String get osButton => Intl.message('Continue', name: 'osButton');
+
   // Bottom navigation bar
   String get bnvChats => Intl.message('Chats', name: 'bnvChats');
   String get bnvContacts => Intl.message('Contacts', name: 'bnvContacts');
   String get bnvStatus => Intl.message('Status', name: 'bnvStatus');
   String get bnvNotifications => Intl.message('Notifications', name: 'bnvNotifications');
+
+  // Contacts screen
+  String get csSearch => Intl.message('Name or email address', name: 'csSearch');
+  String get csNewGroupButton => Intl.message('New group', name: 'csNewGroupButton');
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

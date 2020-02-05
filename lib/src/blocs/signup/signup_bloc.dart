@@ -13,8 +13,8 @@ part 'signup_event.dart';
 part 'signup_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  final AuthenticationRepository _authenticationRepository =
-      locator<AuthenticationRepository>();
+  final AuthenticationRepositoryInterface _authenticationRepository =
+      locator<AuthenticationRepositoryInterface>();
 
   @override
   SignUpState get initialState => SignUpState.empty();
@@ -88,7 +88,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   ) async* {
     yield SignUpState.loading();
     try {
-      final UserModel user = await _authenticationRepository.signUp(
+      final RegisteredUserModel user = await _authenticationRepository.signUp(
         name: name,
         email: email,
         password: password,

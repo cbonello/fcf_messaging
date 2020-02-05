@@ -3,6 +3,7 @@ import 'package:fcf_messaging/src/blocs/tab/tab_bloc.dart';
 import 'package:fcf_messaging/src/models/app_tabs_model.dart';
 import 'package:fcf_messaging/src/repositories/hive/hive_repository.dart';
 import 'package:fcf_messaging/src/screens/home/home_screen.dart';
+import 'package:fcf_messaging/src/screens/onboarding_screen.dart';
 import 'package:fcf_messaging/src/screens/signin/signin_screen.dart';
 import 'package:fcf_messaging/src/screens/splash_screen.dart';
 import 'package:fcf_messaging/src/services/app_localizations.dart';
@@ -47,6 +48,9 @@ class _AppState extends State<App> {
               create: (BuildContext context) => TabBloc(initialTab: AppTabModel.CHATS),
               child: HomeScreen(authenticatedUser: state.user),
             );
+          }
+          if (state is DisplayOnboarding) {
+            return OnboardingScreen();
           }
           return SplashScreen();
         },
