@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    logo = AssetImage(APP_ASSET_LOGO);
+    logo = const AssetImage(APP_ASSET_LOGO);
     super.initState();
   }
 
