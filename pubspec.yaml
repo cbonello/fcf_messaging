@@ -18,6 +18,7 @@ dependencies:
   firebase_auth: ^0.15.4
   firebase_core: ^0.4.3+2
   firebase_lumberdash: ^2.1.0
+  firebase_messaging: ^6.0.9
   firebase_storage: ^3.1.1
   flushbar: ^1.9.1
   flutter_auth_buttons: ^0.6.0
